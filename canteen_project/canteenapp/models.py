@@ -14,3 +14,10 @@ class orders(models.Model):
     total_price = models.IntegerField()
     student = models.ForeignKey(User,on_delete=models.CASCADE)
     food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
+
+class Feedback(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    food_item = models.ForeignKey(FoodItems, on_delete=models.CASCADE, null=True, blank=True)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rating from 1 to 5
+    comments = models.TextField(blank=True)
+    submission_date = models.DateTimeField(auto_now_add=True)
