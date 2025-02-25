@@ -8,6 +8,14 @@ class TimeStampedModel(models.Model):
      class Meta:
           abstract = True
 
+
+class Category(TimeStampedModel):
+    name = models.CharField(max_length=30,unique=True)
+    def __str__(self):
+        return self.name
+
+
+
 class FoodItems(TimeStampedModel):
     
     name = models.CharField(max_length=30)
@@ -15,7 +23,7 @@ class FoodItems(TimeStampedModel):
     description = models.TextField(blank=True)
     f_stock = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2)
-    student = models.ForeignKey(User,on_delete=models.CASCADE)
+    category = models.ForeignKey(Category,on_delete=models.CASCADE, null=True,blank=False)
 
     def __str__(self):
         return self.name
