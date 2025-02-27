@@ -7,3 +7,9 @@ def index(request):
 
 def home(request):
     return render(request,'home.html')
+
+def layout(request):
+    return render(request,'layout.html')
+
+def foodlist(request):
+    return render(request,'foodlist.html')
