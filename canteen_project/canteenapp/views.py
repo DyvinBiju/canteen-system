@@ -11,5 +11,5 @@ def home(request):
 def layout(request):
     return render(request,'layout.html')
 
-def foodlist(request):
-    return render(request,'foodlist.html')
+def food_list(request):
+    return render(request,'food_list.html')
