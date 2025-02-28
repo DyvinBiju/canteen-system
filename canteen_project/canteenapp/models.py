@@ -31,10 +31,12 @@ class FoodItems(TimeStampedModel):
 
 class orders(TimeStampedModel):
     
-    total_price = models.IntegerField()
+    # total_price = models.IntegerField()
     student = models.ForeignKey(User,on_delete=models.CASCADE)
-    food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
+    # food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.student.first_name
 
 class Feedback(TimeStampedModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
