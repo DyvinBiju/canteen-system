@@ -1,0 +1,385 @@
+{%extends 'index.html'%}
+{%load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Home page</title>
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
+
+  <!-- font awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- nice select -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha256-mLBIhmBvigTFWPSCtvdu6a76T+3Xyt+K571hupeFLg4=" crossorigin="anonymous" />
+  <!-- slidck slider -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha256-UK1EiopXIL+KVhfbFa8xrmAWPeBjMVdvYMYkTAEv/HI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css.map" integrity="undefined" crossorigin="anonymous" />
+
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+</head>
+
+<body>
+     {%block contents%}
+    <!-- slider section -->
+    <section class="slider_section ">
+     <div class="container ">
+       <div class="row">
+         <div class="col-lg-10 mx-auto">
+           <div class="detail-box">
+             <h1>
+               Savor the taste of Campus Life
+             </h1>
+             <p>
+               Enjoy fresh and tasty meals right on campus
+             </p>
+           </div>
+           <div class="find_container ">
+             <div class="container">
+               <div class="row">
+                 <div class="col">
+                  
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="slider_container">
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img1.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img2.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img3.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img4.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img1.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img2.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img3.png'%}" alt="" />
+         </div>
+       </div>
+       <div class="item">
+         <div class="img-box">
+           <img src="{% static 'images/slider-img4.png'%}" alt="" />
+         </div>
+       </div>
+     </div>
+   </section>
+   <!-- end slider section -->
+ </div>
+
+
+ <!-- recipe section -->
+
+ <section class="recipe_section layout_padding-top">
+   <div class="container">
+     <div class="heading_container heading_center">
+       <h2>
+         Our Best Popular Recipes
+       </h2>
+     </div>
+     <div class="row">
+       <div class="col-sm-6 col-md-4 mx-auto">
+         <div class="box">
+           <div class="img-box">
+             <img src="{% static 'images/r1.jpg'%}" class="box-img" alt="">
+           </div>
+           <div class="detail-box">
+             <h4>
+               Breakfast
+             </h4>
+             <a href="{% url 'foodbycategory' 'breakfast' %}">
+               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+             </a>
+           </div>
+         </div>
+       </div>
+       <div class="col-sm-6 col-md-4 mx-auto">
+         <div class="box">
+           <div class="img-box">
+             <img src="{% static 'images/r2.jpg'%}" class="box-img" alt="">
+           </div>
+           <div class="detail-box">
+             <h4>
+               Lunch
+             </h4>
+             <a href="{% url 'foodbycategory' 'lunch' %}">
+               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+             </a>
+           </div>
+         </div>
+       </div>
+       <div class="col-sm-6 col-md-4 mx-auto">
+         <div class="box">
+           <div class="img-box">
+             <img src="{% static 'images/r3.jpg'%}" class="box-img" alt="">
+           </div>
+           <div class="detail-box">
+             <h4>
+               Dinner
+             </h4>
+             <a href="{% url 'foodbycategory' 'dinner' %}">
+               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+             </a>
+           </div>
+         </div>
+       </div>
+     </div>
+     
+   </div>
+ </section>
+
+ <!-- end recipe section -->
+
+ <!-- app section -->
+<!--
+ <section class="app_section">
+   <div class="container">
+     <div class="col-md-9 mx-auto">
+       <div class="row">
+         <div class="col-md-7 col-lg-8">
+           <div class="detail-box">
+             <h2>
+               <span> Get the</span> <br>
+               Delfood App
+             </h2>
+             <p>
+               long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The poin
+             </p>
+             <div class="app_btn_box">
+               <a href="" class="mr-1">
+                 <img src="{% static 'images/google_play.png'%}" class="box-img" alt="">
+               </a>
+               <a href="">
+                 <img src="{% static 'images/app_store.png'%}" class="box-img" alt="">
+               </a>
+             </div>
+             <a href="" class="download_btn">
+               Download Now
+             </a>
+           </div>
+         </div>
+         <div class="col-md-5 col-lg-4">
+           <div class="img-box">
+             <img src="{% static 'images/mobile.png'%}" class="box-img" alt="">
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+
+ </section>
+-->
+ <!-- end app section -->
+
+ <!-- about section -->
+
+ <section class="about_section layout_padding">
+   <div class="container">
+     <div class="col-md-11 col-lg-10 mx-auto">
+       <div class="heading_container heading_center">
+         <h2>
+           About Us
+         </h2>
+       </div>
+       <div class="box">
+         <div class="col-md-7 mx-auto">
+           <div class="img-box">
+             <img src="{% static 'images/about-img.jpg'%}" class="box-img" alt="">
+           </div>
+         </div>
+         <div class="detail-box">
+           <p>
+            Welcome to BVM Canteen, your go-to destination for delicious, hygienic, and affordable meals on campus. We take pride in serving a variety of freshly prepared dishes, catering to different tastes and dietary preferences. Our canteen is designed to provide students and staff with a comfortable and friendly environment where they can enjoy nutritious food and refreshing beverages.
+
+            We prioritize quality ingredients, cleanliness, and prompt service to ensure that you have the best dining experience. Whether you're grabbing a quick snack between classes or enjoying a meal with friends, our canteen is here to keep you energized throughout the day.
+            
+            Join us and savor the flavors that make campus life even better!
+            
+           </p>
+           <a href="">
+             <i class="fa fa-arrow-right" aria-hidden="true"></i>
+           </a>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- end about section -->
+
+ <!-- news section -->
+
+ <section class="news_section">
+   <div class="container">
+     <div class="heading_container heading_center">
+       <h2>
+         Latest News
+       </h2>
+     </div>
+     <div class="row">
+       <div class="col-md-6">
+         <div class="box">
+           <div class="img-box">
+             <img src="{% static 'images/n1.jpg'%}" class="box-img" alt="">
+           </div>
+           <div class="detail-box">
+             <h4>
+              Delicious & Healthy Meals for You
+             </h4>
+             <p>
+               Enjoy a variety of nutritious and tasty meals, freshly prepared to energize your day.
+
+               Order easily, eat well, and stay refreshed!
+               
+             </p>
+             <a href="">
+               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+             </a>
+           </div>
+         </div>
+       </div>
+       <div class="col-md-6">
+         <div class="box">
+           <div class="img-box">
+             <img src="{% static 'images/n2.jpg'%}" class="box-img" alt="">
+           </div>
+           <div class="detail-box">
+             <h4>
+              Fuel Your Day with Great Food
+             </h4>
+             <p>
+              From hearty breakfasts to wholesome lunches and refreshing snacks, our college canteen serves delicious meals with fresh ingredients.
+
+              
+              
+             </p>
+             <a href="">
+               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+             </a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+
+ <!-- end news section -->
+
+ <!-- client section -->
+
+ <section class="client_section layout_padding">
+   <div class="container">
+     <div class="col-md-11 col-lg-10 mx-auto">
+       <div class="heading_container heading_center">
+         <h2>
+           Testimonial
+         </h2>
+       </div>
+       <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+         <div class="carousel-inner">
+           <div class="carousel-item active">
+             <div class="detail-box">
+               <h4>
+                 Teachers
+               </h4>
+               <p>
+                The college canteen system has truly transformed our dining experience. With a seamless ordering process, a variety of delicious and hygienic food options, and quick service, it has made our breaks more enjoyable. The digital payment integration is a game-changer, reducing long queues and making transactions effortless. Whether it's a quick coffee between lectures or a wholesome meal, the canteen ensures quality and convenience. Highly recommended for all students
+               </p>
+               <i class="fa fa-quote-left" aria-hidden="true"></i>
+             </div>
+           </div>
+           <div class="carousel-item">
+             <div class="detail-box">
+               <h4>
+                 Students
+               </h4>
+               <p>
+                The canteen system at our college has made a huge difference in our daily routine. The user-friendly ordering system saves time, and the diverse menu ensures there’s something for everyone. The food is always fresh, tasty, and reasonably priced, making it the perfect spot to grab a quick bite or enjoy a meal with friends. A fantastic initiative that enhances student life
+               </p>
+               <i class="fa fa-quote-left" aria-hidden="true"></i>
+             </div>
+           </div>
+           <div class="carousel-item">
+             <div class="detail-box">
+               <h4>
+                 Staffs
+               </h4>
+               <p>
+                The new canteen system is nothing short of amazing! The efficient service, digital payment options, and real-time order tracking have made getting food so much easier. The hygiene standards are excellent, and the variety of meals keeps things exciting. It’s now a favorite hangout spot where we can relax and enjoy great food. Highly recommended
+               </p>
+               <i class="fa fa-quote-left" aria-hidden="true"></i>
+             </div>
+           </div>
+         </div>
+         <a class="carousel-control-prev d-none" href="#customCarousel1" role="button" data-slide="prev">
+           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+           <span class="sr-only">Previous</span>
+         </a>
+         <a class="carousel-control-next" href="#customCarousel1" role="button" data-slide="next">
+           <i class="fa fa-arrow-right" aria-hidden="true"></i>
+           <span class="sr-only">Next</span>
+         </a>
+       </div>
+     </div>
+   </div>
+ </section>
+ <!-- jQery -->
+ <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+ <!-- bootstrap js -->
+ <script src="{% static 'js/bootstrap.js' %}"></script>
+ <!-- slick  slider -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
+ <!-- nice select -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
+ <!-- custom js -->
+ <script src="{% static 'js/custom.js' %}"></script>
+
+ {%endblock%}
+</body>
+
+</html>

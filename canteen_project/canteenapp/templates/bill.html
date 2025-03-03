@@ -1,0 +1,56 @@
+{%extends 'layout.html'%}
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>customer bill</title>
+     
+</head>
+
+<body>
+     
+{%block contents%}
+
+<link href="{% static 'css/bill.css' %}" rel="stylesheet" />
+<div class="wrapper">
+<div class="bill-container">
+     <h1>Canteen Bill</h1>
+     <p>Date: <span id="bill-date"></span></p>
+     <p>Customer Name:{{bill_data.User}}</p>
+     <table>
+         <thead>
+             <tr>
+                 <th>Item</th>
+                 <th>Quantity</th>
+                 <th>Price</th>
+             </tr>
+         </thead>
+         <tbody>
+            {% for bill_set in bill_data %}
+             <tr>
+                 <td>{{bill_set.food}}</td>
+                 
+                 <td>{{bill_set.quantity}}</td>
+                 <td>{{bill_set.price}}</td>
+             </tr>
+             
+             {% endfor %}
+         </tbody>
+     </table>
+     <p>Total: {{total}}</p>
+     <p>Thank you for dining with us!</p>
+ </div>
+</div>
+ <script>
+     // Set the current date
+     document.getElementById('bill-date').textContent = new Date().toLocaleDateString();
+ </script>
+
+
+
+{%endblock%}
+</body>
+
+</html>
