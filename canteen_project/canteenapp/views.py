@@ -37,6 +37,10 @@ def foodbycategory(request,meal_type):
     category = get_object_or_404(Category,name=meal_type)
 
 
+def foodbycategory(request,meal_type):
+    category = get_object_or_404(Category,name=meal_type)
+
+
 
 # Get search and sorting parameters
     # query = request.GET.get('q', '')  
