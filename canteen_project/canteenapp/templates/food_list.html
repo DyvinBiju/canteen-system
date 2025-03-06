@@ -263,7 +263,10 @@
                     </div>
                     <!-- <p class="stock">Stock: {{ food.f_stock }}</p> -->
                     <span class="price">Price: ₹{{ food.price }}</span>
-
+                    <!-- Inside your food-card form -->
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'add_to_cart' food.id %}" method="POST">
+                     {% csrf_token %}
                     <!-- Combined Quantity and Add to Cart buttons next to each other -->
                     <div class="quantity-container">
                         <!-- Combined 'Qty' label and input field in the same box -->
@@ -274,6 +277,9 @@
                         <button type="submit" class="cart-btn">Add to Cart</button>
                     </div>
                 </form>
+                {% else %}
+                <p style="color: red; font-size: 14px;">You must <a href="{% url 'login' %}">log in</a> to add items to the cart.</p>
+                {% endif %}
             </div>
             {% empty %}
             <p style="color: aqua;">No food items available.</p>

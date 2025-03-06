@@ -152,13 +152,16 @@ def foodbycategory(request,meal_type):
     # return render(request, 'food_list.html', {'latest_foods': latest_foods})
     # ,'query': query,'sort_by': sort_by,})
 
-
+@login_required(login_url='login') 
 def add_to_cart(request, food_id):
     cart = request.session.get('cart', {})
     food_item = get_object_or_404(FoodItems, id=food_id)
     quantity = int(request.POST.get('quantity', 1))  # Get the quantity from the form
-
-    if str(food_id) in cart:
+    
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to add items to the cart.")
+        return redirect('login')
+    elif str(food_id) in cart:
         cart[str(food_id)]['quantity'] += quantity
     else:
         cart[str(food_id)] = {
