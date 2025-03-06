@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -15,7 +15,6 @@
 
   <title>Index</title>
 
-
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
 
@@ -26,10 +25,9 @@
   <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
   <!-- nice select -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha256-mLBIhmBvigTFWPSCtvdu6a76T+3Xyt+K571hupeFLg4=" crossorigin="anonymous" />
-  <!-- slidck slider -->
+  <!-- slick slider -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha256-UK1EiopXIL+KVhfbFa8xrmAWPeBjMVdvYMYkTAEv/HI=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css.map" integrity="undefined" crossorigin="anonymous" />
-
 
   <!-- Custom styles for this template -->
   <link href="{% static 'css/style.css' %}" rel="stylesheet" />
@@ -45,24 +43,29 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand">
             <span>
               Delfood
             </span>
           </a>
-          <div class="" id="">
+          <div class="" id="navbarSupportedContent">
             <div class="User_option">
-              <a href="">
-                <i class="fa fa-user" aria-hidden="true"></i>
-                <span>Login</span>
-              </a>
-              <!--<form class="form-inline ">
-                <input type="search" placeholder="Search" />
-                <button class="btn  nav_search-btn" type="submit">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-              </form>-->
-            </div>
+              <div class="dropdown">
+                  {% if user.is_authenticated %}
+                      <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                          <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                      </ul>
+                  {% else %}
+                      <a href="{% url 'login' %}" class="btn btn-light">
+                          <i class="fa fa-user" aria-hidden="true"></i> Login
+                      </a>
+                  {% endif %}
+              </div>
+          </div>
             <div class="custom_menu-btn">
               <button onclick="openNav()">
                 <img src="{% static 'images/menu.png'%}" alt="">
@@ -82,8 +85,9 @@
     </header>
     <!-- end header section -->
 
-    {%block contents%}
-    {%endblock%}
+    {% block contents %}
+    {% endblock %}
+  </div>
   <!-- end client section -->
 
   <div class="footer_container">
@@ -138,10 +142,7 @@
         </div>
       </div>
     </section>
-    <!-- end info_section -->
 
-
-    <!-- footer section -->
     <footer class="footer_section">
       <div class="container">
         <p>
@@ -151,20 +152,19 @@
         </p>
       </div>
     </footer>
-    <!-- footer section -->
 
   </div>
+
   <!-- jQery -->
   <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-  <!-- bootstrap js -->
-  <script src="{% static 'js/bootstrap.js' %}"></script>
-  <!-- slick  slider -->
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <!-- slick slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
   <!-- nice select -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" crossorigin="anonymous"></script>
   <!-- custom js -->
   <script src="{% static 'js/custom.js' %}"></script>
-
 
 </body>
 
