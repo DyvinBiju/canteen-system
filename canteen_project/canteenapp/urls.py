@@ -1,11 +1,18 @@
 from django.urls import path
+from .views import signup_view, login_view, logout_view, home, index, profile_view
 from django.conf.urls.static import static
 from . import views
 from .views import add_to_cart, view_cart, remove_from_cart, checkout
 from django.conf import settings
+from .views import signup_view, login_view, logout_view, home, index, profile_view
 
 urlpatterns = [
 
+path('', home, name='home'),        
+path('signup/', signup_view, name='signup'), 
+path('login/', login_view, name='login'),    
+path('logout/', logout_view, name='logout'), 
+path('profile/', profile_view, name='profile'),
 path('index/', views.index, name='index'),
 path('', views.home, name='home'),
 path('layout/', views.layout, name='layout'),
