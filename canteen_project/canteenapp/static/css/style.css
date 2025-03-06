@@ -154,7 +154,7 @@ a:focus {
 }
 
 .User_option a {
-  color: #ffffff;
+  color: black !important;
   margin-left: 25px;
 }
 
@@ -798,3 +798,7 @@ a:focus {
   color: inherit;
 }
 /*# sourceMappingURL=style.css.map */
+.dropdown-item:hover {
+  text-align: center;
+  margin-left: 0px;
+}
