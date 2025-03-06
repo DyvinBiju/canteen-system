@@ -216,16 +216,16 @@ def checkout(request):
 
 
 def food_list(request):
-    category_id = request.GET.get('category_id')  # Get category ID from request
+    category_id = int(request.GET.get('category_id'))  # Get category ID from request
     query = request.GET.get('q', '')  # Get search query
     sort_by = request.GET.get('sort', '')  # Get sorting option
 
     latest_foods = FoodItems.objects.all()  # Default: fetch all food items
 
-    if category_id and category_id.isdigit():  # Ensure category_id is a valid number
+    if category_id:  # Ensure category_id is a valid number
         category_id = int(category_id)
         latest_foods = latest_foods.filter(category_id=category_id)  # Filter by category
-
+        print(latest_foods)
     if query:
         latest_foods = latest_foods.filter(name__icontains=query)  # Apply search filter
 
@@ -236,7 +236,7 @@ def food_list(request):
         'latest_foods': latest_foods,
         'query': query,
         'sort_by': sort_by,
-        'category_id': category_id if isinstance(category_id, int) else None  # Pass category_id safely
+        'category_id': category_id #if isinstance(category_id, int) else None  # Pass category_id safely
     })
 
 def add_to_cart(request, food_id):
