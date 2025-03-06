@@ -210,24 +210,6 @@
             }
             window.location.href = url;
         }
-    </script> -->
-
-    <script>
-
-    function sortFoodItems() {
-        var selectedOption = document.getElementById("sort-options").value;
-        var searchQuery = "{{ query }}";  // Preserve search query
-        var categoryId = "{{ category_id }}";  // Preserve category ID
-    
-        var url = "/food_list/?category_id=" + categoryId + "&sort=" + selectedOption;
-        if (searchQuery) {
-            url += "&q=" + searchQuery;
-        }
-    
-        window.location.href = url;
-    }
-    
-
     </script>
     <!-- End Sort JavaScript -->
 
@@ -248,6 +230,9 @@
             </select>
             <!-- End Sorting Dropdown -->   
 
+            <!-- food-search -->
+            <form class="form-inline " method="get">
+                <input type="hidden" name="category_id" value="{{ category_id }}">
             <!-- Food Search Form -->
             <form class="form-inline" method="get">
                 <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}"/>
