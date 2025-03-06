@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf.urls.static import static
 from . import views
+from .views import add_to_cart, view_cart, remove_from_cart, checkout
 from django.conf import settings
 
 urlpatterns = [
@@ -13,6 +14,11 @@ path('bill/', views.bill, name='bill'),
 
 path('food_list/<str:meal_type>/', views.foodbycategory, name='foodbycategory'),
 
+path('add_to_cart/<int:food_id>/', add_to_cart, name='add_to_cart'),
+path('view_cart/', views.view_cart, name='view_cart'),
+path('remove_from_cart/<int:food_id>/', remove_from_cart, name='remove_from_cart'),
+path('checkout/', checkout, name='checkout'),
+path('add_to_cart/<int:food_id>/', views.add_to_cart, name='add_to_cart'),
 
 ]
 

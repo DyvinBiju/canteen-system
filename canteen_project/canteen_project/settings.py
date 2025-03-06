@@ -84,7 +84,11 @@ DATABASES = {
     }
 }
 
-
+# Session settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database for session storage
+SESSION_COOKIE_AGE = 1209600  # 2 weeks (time in seconds)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # False means keep session even after browser closes
+SESSION_SAVE_EVERY_REQUEST = False  # Save sessions on modification only
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

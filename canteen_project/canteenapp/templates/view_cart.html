@@ -1,0 +1,84 @@
+{%extends 'layout.html'%}
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+    <link href="{% static 'css/view_cart.css' %}" rel="stylesheet" />
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .btn {
+            padding: 8px 12px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn-danger {
+            background-color: red;
+        }
+        .btn-success {
+            background-color: green;
+        }
+        .btn-danger:hover, .btn-success:hover {
+            opacity: 0.8;
+        }
+    </style> -->
+</head>
+
+<body>
+    {%block contents%}
+    <h1>Your Cart</h1>
+<div class="cart-container">
+    {% if cart %}
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price (₹)</th>
+                <th>Total (₹)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for food_id, item in cart.items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity|floatformat:2|add:item.price }}</td>
+                <td>
+                    <a href="{% url 'remove_from_cart' food_id %}" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Total Price: ₹{{ total_price }}</h2>
+    <a href="{% url 'bill' %}" class="btn btn-success">Proceed to Checkout</a>
+    {% else %}
+    <p>Your cart is empty. <a href="{% url 'foodbycategory' 'all' %}">Browse food items</a></p>
+    {% endif %}
+</div>    
+    {%endblock%}
+
+</body>
+</html>
+
