@@ -17,6 +17,9 @@ def home(request):
     categories = Category.objects.all()
     return render(request,'home.html',{'categories':categories})
 
+def about(request):
+    return render(request,'about.html',)
+
 def signup_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -216,14 +219,37 @@ def checkout(request):
 
 
 def food_list(request):
-    category_id = int(request.GET.get('category_id'))  # Get category ID from request
+    category_id = request.GET.get('category_id')  # Get category ID from request
     query = request.GET.get('q', '')  # Get search query
     sort_by = request.GET.get('sort', '')  # Get sorting option
+
+    # sort_by = request.GET.get('sort')  
+
+
+    # Define valid sorting fields
+    valid_sort_fields = {
+        # 'name':'name',
+        'price': 'price',
+        'created_at': 'created_at',
+        'f_stock': 'f_stock'
+     }
+    
+    # Ensure the selected sort option is valid
+    # sort_field = valid_sort_fields.get(sort_by, 'name')
+
+
+    sort_field = valid_sort_fields.get(sort_by, 'f_stock')
+    sort_field = valid_sort_fields.get(sort_by, 'price')
+    sort_field = valid_sort_fields.get(sort_by, 'created_at')
+    # sort_field = valid_sort_fields.get(sort_by, 'name')
+
+
+
 
     latest_foods = FoodItems.objects.all()  # Default: fetch all food items
 
     if category_id:  # Ensure category_id is a valid number
-        category_id = int(category_id)
+        # category_id = int(category_id)
         latest_foods = latest_foods.filter(category_id=category_id)  # Filter by category
         print(latest_foods)
     if query:
