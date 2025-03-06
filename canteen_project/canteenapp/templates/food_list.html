@@ -221,6 +221,7 @@
         <div class="search_n_sort_container">
             <!-- Sorting Dropdown -->
             <label class="sort-name" for="sort-options">Sort Food:</label>
+            
             <select id="sort-options" onchange="sortFoodItems()" class="sort-select">
                 <option value="None">None</option>
                 <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>by date</option>
@@ -229,6 +230,9 @@
             </select>
             <!-- End Sorting Dropdown -->   
 
+            <!-- food-search -->
+            <form class="form-inline " method="get">
+                <input type="hidden" name="category_id" value="{{ category_id }}">
             <!-- Food Search Form -->
             <form class="form-inline" method="get">
                 <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}"/>

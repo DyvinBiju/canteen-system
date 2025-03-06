@@ -12,7 +12,9 @@ path('layout/', views.layout, name='layout'),
 # path('feedback/', views.feedback, name='feedback'),
 path('bill/', views.bill, name='bill'),
 
-path('food_list/<str:meal_type>/', views.foodbycategory, name='foodbycategory'),
+path('food_list/', views.food_list, name='food_list'),
+# path('cart/', views.cart, name='cart'),
+
 
 path('add_to_cart/<int:food_id>/', add_to_cart, name='add_to_cart'),
 path('view_cart/', views.view_cart, name='view_cart'),
