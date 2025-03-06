@@ -123,22 +123,25 @@
        </h2>
      </div>
      <div class="row">
-       <div class="col-sm-6 col-md-4 mx-auto">
+      {% for category in categories %}
+      <div class="col-sm-6 col-md-4 mx-auto">
          <div class="box">
            <div class="img-box">
-             <img src="{% static 'images/r1.jpg'%}" class="box-img" alt="">
+             <img src="{{ category.image.url }}" class="box-img" alt="">
            </div>
            <div class="detail-box">
              <h4>
-               Breakfast
+              {{ category.name | upper}}
              </h4>
-             <a href="{% url 'foodbycategory' 'breakfast' %}">
+             <a href="{% url 'food_list' %}?Category_id={{ category.id }}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
+
            </div>
          </div>
        </div>
-       <div class="col-sm-6 col-md-4 mx-auto">
+       {% endfor %}
+       <!-- <div class="col-sm-6 col-md-4 mx-auto">
          <div class="box">
            <div class="img-box">
              <img src="{% static 'images/r2.jpg'%}" class="box-img" alt="">
@@ -147,7 +150,7 @@
              <h4>
                Lunch
              </h4>
-             <a href="{% url 'foodbycategory' 'lunch' %}">
+             <a href="{% url 'food_list' %}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
            </div>
@@ -162,13 +165,13 @@
              <h4>
                Dinner
              </h4>
-             <a href="{% url 'foodbycategory' 'dinner' %}">
+             <a href="{% url 'food_list' %}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
            </div>
          </div>
        </div>
-     </div>
+     </div> -->
      
    </div>
  </section>
