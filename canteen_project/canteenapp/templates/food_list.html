@@ -1,0 +1,281 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .food-grid {
+            padding: 30px;
+            padding-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: -245px;
+        }
+
+        .food-image {
+            width: 100%;
+            height: 700px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .food-card {
+            padding: 10px;
+            border-radius: 10px;
+            width: 300px;
+            height: auto;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.26);
+            background-color: #3838c3;
+        }
+
+        .food-card:hover {
+            background-color: #4d4ddf;
+            transform: scale(1.02);
+            transition: 0.3s;
+        }
+
+        .food-card img {
+            width: 100%;
+            border-radius: 5px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .food-card img:hover {
+            background-color: #000000;
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #ff6600;
+        }
+
+        .menu {
+            background-color: rgb(255, 255, 255);
+        }
+
+        .order-btn {
+            background-color: #ff6600;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            transform: scale(0.8);
+        }
+
+        .cart-btn {
+            background-color: #188d0c;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            transform: scale(0.8);
+        }
+
+        .cart-btn:hover {
+            background-color: #188d0c;
+            transform: scale(.9);
+        }
+
+        /* .order-btn:hover {
+            background-color: #e65c00;
+            transform: scale(1.05);
+        } */
+
+        .description-container {
+            width: 100%;
+            height: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .description {
+            display: block;
+            max-height: 100px;
+            line-height: 1.5;
+            transition: transform 1s ease-in-out;
+            color: #eae5e5;
+            text-align: justify;
+        }
+
+        .description-container:hover .description {
+            transform: translateY(-70%);
+        }
+
+        .name {
+            color: black;
+            padding-top: 8px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        .stock {
+            color: #42d032;
+            padding-top: 8px;
+            font-size: 17px;
+        }
+
+        .frm {
+            position: relative;
+            border-radius: 10px;
+            margin-left: 25px;
+        }
+
+        .search_n_sort_container {
+            background-color: #b4a5a5;
+            padding-top: 5px;
+            display: flex;
+            justify-content: end;
+            padding-right: 30px;
+            padding-bottom: 5px;
+        }
+
+        .sort-name {
+            padding-left: 20px;
+            padding-top: 10px;
+        }
+
+        /* Combined Quantity and Add to Cart buttons next to each other */
+        .quantity-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            background-color: #42d032; /* Green background */
+            border-radius: 10px;
+            padding: 8px;
+            gap: 10px;
+            margin-left: 30px;
+            /* transform: scale(0.8); */
+        }
+
+        .quantity-input {
+            width: 50px;
+            padding: 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        /* .quantity-box:hover {
+            background-color: #188d0c;
+            transform: scale(1.1);
+        } */
+        .qty-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: white; /* White text for contrast */
+        }
+
+        .cart-btn {
+            margin-left: 10px;  /* To add space between quantity box and Add to Cart button */
+        }
+
+    </style>
+
+    <!-- Sort JavaScript -->
+    <script>
+        function sortFoodItems() {
+            var selectedOption = document.getElementById("sort-options").value;
+            var searchQuery = "{{ query }}";  // Preserve search query if present
+            var url = "?sort=" + selectedOption;
+            if (searchQuery) {
+                url += "&q=" + searchQuery;
+            }
+            window.location.href = url;
+        }
+    </script>
+    <!-- End Sort JavaScript -->
+
+</head>
+
+<body>
+    <!-- Food Listing Section -->
+    <section class="menu">
+        <div class="search_n_sort_container">
+            <!-- Sorting Dropdown -->
+            <label class="sort-name" for="sort-options">Sort Food:</label>
+            
+            <select id="sort-options" onchange="sortFoodItems()" class="sort-select">
+                <option value="None">None</option>
+                <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>by date</option>
+                <option value="f_stock" {% if sort_by == "f_stock" %}selected{% endif %}>by stock</option>
+                <option value="price" {% if sort_by == "price" %}selected{% endif %}>by price</option>
+            </select>
+            <!-- End Sorting Dropdown -->   
+
+            <!-- food-search -->
+            <form class="form-inline " method="get">
+                <input type="hidden" name="category_id" value="{{ category_id }}">
+            <!-- Food Search Form -->
+            <form class="form-inline" method="get">
+                <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}"/>
+                <button class="btn nav_search-btn" type="submit">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>
+            <!-- End Food Search -->
+        </div>
+        
+        <!-- Display Grid for Food Items -->
+        <div class="food-grid">
+            {% for food in latest_foods %}
+            <div class="food-card">
+                <form action="{% url 'add_to_cart' food.id %}" method="POST">
+                    {% csrf_token %}
+                    <img src="{{ food.image.url }}" alt="Food Image" class="food-image">
+                    <h3 class="name">{{ food.name | upper}}</h3>
+                    <div class="description-container">
+                        <p class="description">{{ food.description }}</p>
+                    </div>
+                    <p class="stock">Stock: {{ food.f_stock }}</p>
+                    <span class="price">Price: ₹{{ food.price }}</span>
+
+                    <!-- Combined Quantity and Add to Cart buttons next to each other -->
+                    <div class="quantity-container">
+                        <!-- Combined 'Qty' label and input field in the same box -->
+                        <div class="quantity-box">
+                            <span class="qty-label">Qty:</span>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ food.f_stock }}" class="quantity-input" />
+                        </div>
+                        <button type="submit" class="cart-btn">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
+            {% empty %}
+            <p style="color: aqua;">No food items available.</p>
+            {% endfor %}
+        </div>
+        <!-- End Display Grid for Food Items -->
+    </section>
+    <!-- End Food Listing -->
+</body>
+</html>
+{% endblock %}
+

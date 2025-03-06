@@ -1,0 +1,106 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .bill-container {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .total-row {
+            font-weight: bold;
+            text-align: right;
+        }
+        .total-price {
+            color: #ff6600;
+            font-size: 18px;
+        }
+        .checkout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #42d032;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .checkout-btn:hover {
+            background-color: #36b027;
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-container">
+        <div class="header">
+            <h1>Bill Summary</h1>
+            <p><strong>Customer Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Date:</strong> {{ current_date }}</p>
+        </div>
+
+        {% if cart %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for food_id, item in cart.items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.quantity|floatformat:2|add:item.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2 class="total-row">Grand Total: <span class="total-price">₹{{ total_price }}</span></h2>
+
+        <a href="{% url 'checkout' %}" class="checkout-btn">Proceed to Checkout</a>
+        {% else %}
+        <p>Your cart is empty. <a href="{% url 'foodbycategory' 'all' %}">Browse items</a> to add more!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}

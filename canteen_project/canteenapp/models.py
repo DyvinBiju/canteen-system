@@ -11,6 +11,7 @@ class TimeStampedModel(models.Model):
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=30,unique=True)
+    image = models.ImageField(upload_to='category_images/',null=True,blank=True)
     def __str__(self):
         return self.name
 
@@ -31,10 +32,12 @@ class FoodItems(TimeStampedModel):
 
 class orders(TimeStampedModel):
     
-    total_price = models.IntegerField()
+    # total_price = models.IntegerField()
     student = models.ForeignKey(User,on_delete=models.CASCADE)
-    food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
+    # food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.student.first_name
 
 class Feedback(TimeStampedModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -43,8 +46,14 @@ class Feedback(TimeStampedModel):
     comments = models.TextField(blank=True)
     submission_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.comments
+
 class OrderItems(TimeStampedModel):
      food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
      orders = models.ForeignKey(orders,on_delete=models.CASCADE)
      quantity = models.IntegerField()
      price = models.DecimalField(max_digits=10,decimal_places=2)
+
+     def __str__(self):
+        return self.food.name
