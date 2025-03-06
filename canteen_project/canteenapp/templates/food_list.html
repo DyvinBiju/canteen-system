@@ -202,14 +202,19 @@
     <!-- Sort JavaScript -->
     <script>
         function sortFoodItems() {
-            var selectedOption = document.getElementById("sort-options").value;
-            var searchQuery = "{{ query }}";  // Preserve search query if present
-            var url = "?sort=" + selectedOption;
-            if (searchQuery) {
-                url += "&q=" + searchQuery;
-            }
-            window.location.href = url;
-        }
+    var selectedOption = document.getElementById("sort-options").value;
+    var searchQuery = "{{ query }}"; // Preserve search query if present
+    var categoryId = "{{ category_id }}"; // Preserve category ID
+    
+    var url = "?category_id=" + categoryId + "&sort=" + selectedOption;
+    
+    if (searchQuery) {
+        url += "&q=" + searchQuery;
+    }
+
+    window.location.href = url;
+}
+
     </script>
     <!-- End Sort JavaScript -->
 
@@ -223,18 +228,20 @@
             <label class="sort-name" for="sort-options">Sort Food:</label>
             
             <select id="sort-options" onchange="sortFoodItems()" class="sort-select">
-                <option value="None">None</option>
+                <!-- <option value="None">None</option> -->
                 <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>by date</option>
-                <option value="f_stock" {% if sort_by == "f_stock" %}selected{% endif %}>by stock</option>
+                <!-- <option value="f_stock" {% if sort_by == "f_stock" %}selected{% endif %}>by stock</option> -->
                 <option value="price" {% if sort_by == "price" %}selected{% endif %}>by price</option>
             </select>
+            
             <!-- End Sorting Dropdown -->   
 
             <!-- food-search -->
-            <form class="form-inline " method="get">
-                <input type="hidden" name="category_id" value="{{ category_id }}">
+            <!-- <form class="form-inline " method="get">-->
+                 
             <!-- Food Search Form -->
             <form class="form-inline" method="get">
+                <input type="hidden" name="category_id" value="{{ category_id }}">
                 <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}"/>
                 <button class="btn nav_search-btn" type="submit">
                     <i class="fa fa-search" aria-hidden="true"></i>
