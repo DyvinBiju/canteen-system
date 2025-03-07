@@ -43,8 +43,8 @@
             text-align: right;
         }
         .total-price {
-            color: #ff6600;
-            font-size: 18px;
+            color: #000000;
+            font-size: 33px;
         }
         .checkout-btn {
             display: inline-block;
@@ -68,8 +68,8 @@
 <body>
     <div class="bill-container">
         <div class="header">
-            <h1>Bill Summary</h1>
-            <p><strong>Customer Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <h1 style="font-weight: 600;">Bill Summary</h1>
+            <p><strong>Customer Name:</strong> <a style="font-size: 17px;">{{ user.username | upper}}</strong></a>
             <p><strong>Date:</strong> {{ current_date }}</p>
         </div>
 
