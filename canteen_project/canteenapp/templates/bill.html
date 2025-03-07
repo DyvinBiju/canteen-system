@@ -96,7 +96,7 @@
         </table>
         <h2 class="total-row">Grand Total: <span class="total-price">₹{{ total_price }}</span></h2>
 
-        <a href="{% url 'home' %}" class="checkout-btn">Confirm Payment</a>
+        <a href="{% url 'checkout' %}" class="checkout-btn">Confirm Payment</a>
         {% else %}
         <p>Your cart is empty. <a href="{% url 'foodbycategory' 'all' %}">Browse items</a> to add more!</p>
         {% endif %}
