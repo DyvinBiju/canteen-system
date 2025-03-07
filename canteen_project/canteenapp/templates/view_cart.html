@@ -1,55 +1,154 @@
-{%extends 'layout.html'%}
-{%load static%}
+{% extends 'layout.html' %}
+{% load static %}
 
+{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordered Foods List</title>
+    <style>
 
-    {%block contents%}
-    <body>
-        <div class="cart_body" style="display: flex; justify-content: center; flex-direction: column; align-items: center; height: 70vh;">
-    <h1>Your Cart</h1>
-<div class="cart-container">
-    {% if cart %}
-    <table>
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price (₹)</th>
-                <th>Total (₹)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for food_id, item in cart.items %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.price }}</td>
-                <td>{{ item.quantity|floatformat:2|add:item.price }}</td>
-                <td>
-                    <a href="{% url 'remove_from_cart' food_id %}" class="btn btn-danger">Remove</a>
-                </td>
-            </tr>
-            {% endfor %}
+        .mycart-container {
+        background-color: rgb(16, 82, 214);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Slight pop-up effect */
+        max-width: 700px;
+        width: 90%;
+        }
         
-    <tr>
-     <td><a href="{% url 'bill' %}" class="btn btn-success">Proceed to Checkout</a></td>
-     <td></td>
-     <td></td>
-    <td><h2>Total Price: ₹{{ total_price }}</h2></td>
-    
-    </tr>
-    {% else %}
-    <p>Your cart is empty. <a href="{% url 'food_list' %}">Browse food items</a></p>
-    {% endif %}
-</tbody>
-</table>
-</div>  
-</div>
+        .cart_body {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        padding: 30px;
+        }
+
+        .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+        }
+
+        .food-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .item-details {
+        flex-grow: 1;
+        text-align: left;
+        }
+
+        .item-details h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .item-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .btn-danger {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+
+        .btn-success {
+        background-color: rgb(113, 181, 94);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        }
+        
+        .btn-success:hover {
+            background-color: #04ff00;
+            transform: scale(1.02);
+            transition: 0.3s;
+            color: black;
+        }
+
+        .total-price h2 {
+        font-size: 22px;
+        }
+
+        .cart-actions {
+            margin-left: auto;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .checkout {
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cart_body" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+        <h1>Your Cart</h1>
+        <div class="mycart-container">
+            {% if cart %}
+                {% for food_id, item in cart.items %}
+                    <div class="cart-item">
+                        {% if item.image %}
+                            <img src="{{ item.image }}" alt="{{ item.name }}" class="food-image">
+                        {% else %}
+                            <p>No Image Available</p>
+                        {% endif %}
+                        <div class="item-details">
+                            <h3>{{ item.name }}</h3>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p>Price: ₹{{ item.price }}</p>
+                            <p>Total: ₹{{ item.total }}</p>
+                        </div>
+                        <div class="cart-actions">
+                            <a href="{% url 'remove_from_cart' food_id %}" class="btn btn-danger">Remove</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="cart-summary">
+                    <div class="checkout">
+                        <a href="{% url 'bill' %}" class="btn btn-success">Proceed to Checkout</a>
+                    </div>
+                    <div class="total-price">
+                        <h2>Total Price: ₹{{ total_price }}</h2>
+                    </div>
+                </div>
+            {% else %}
+                <p>Your cart is empty. <a href="{% url 'food_list' %}">Browse food items</a></p>
+            {% endif %}
+        </div>  
+    </div>
 </body> 
-{%endblock%}
- 
-    
-
-
-
-
+{% endblock %}

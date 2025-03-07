@@ -176,23 +176,24 @@ def add_to_cart(request, food_id):
 
 def view_cart(request):
     cart = request.session.get('cart', {})
+    updated_cart = {}
+
     for food_id, item in cart.items():
-        food_item = FoodItems.objects.get(id=food_id)  # Retrieve the food item from the database
-        item['image'] = food_item.image.url  # Get the image URL from the FoodItems model
-        item['total'] = round(float(item['price']) * item['quantity'], 2)  # Calculate total for the item
+        try:
+            food_item = FoodItems.objects.get(id=food_id)  # Retrieve the food item from the database
+            updated_cart[food_id] = {
+                'name': food_item.name,
+                'price': float(food_item.price),
+                'quantity': item['quantity'],
+                'image': food_item.image.url if food_item.image else None,  # Get the image URL
+                'total': round(float(food_item.price) * item['quantity'], 2)  # Calculate total for the item
+            }
+        except FoodItems.DoesNotExist:
+            continue  # Skip if food item is not found
 
-    total_price = sum(item['total'] for item in cart.values())
-    return render(request, 'view_cart.html', {'cart': cart, 'total_price': total_price})
+    total_price = sum(item['total'] for item in updated_cart.values())
 
-
-def remove_from_cart(request, food_id):
-    cart = request.session.get('cart', {})
-
-    if str(food_id) in cart:
-        del cart[str(food_id)]
-
-    request.session['cart'] = cart
-    return redirect('view_cart')
+    return render(request, 'view_cart.html', {'cart': updated_cart, 'total_price': total_price})
 
 @login_required
 def checkout(request):
