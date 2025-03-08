@@ -102,56 +102,6 @@ def bill(request):
     return render(request,'bill.html',context)
 
 
-    
-def foodbycategory(request,meal_type):
-    category = get_object_or_404(Category,name=meal_type)
-
-
-def foodbycategory(request,meal_type):
-    category = get_object_or_404(Category,name=meal_type)
-
-
-
-# Get search and sorting parameters
-    # query = request.GET.get('q', '')  
-
-    # sort_by = request.GET.get('sort')  
-
-
-    # Define valid sorting fields
-    # valid_sort_fields = {
-    #     'name':'name',
-    #     'price': 'price',
-    #     'created_at': 'created_at',
-    #     'f_stock': 'f_stock'
-    # }
-    
-    # Ensure the selected sort option is valid
-    # sort_field = valid_sort_fields.get(sort_by, 'name')
-
-
-    # sort_field = valid_sort_fields.get(sort_by, 'f_stock')
-    # sort_field = valid_sort_fields.get(sort_by, 'price')
-    # sort_field = valid_sort_fields.get(sort_by, 'created_at')
-
-    # query = request.GET.get('q', '')  
-    # Get search query from URL parameters
-    # if query:
-    #     latest_foods = FoodItems.objects.filter(category=category, name__icontains=query).order_by(sort_field)
-#   Filter by search term
-    # else:
-        
-
-
-    # filter(category=category)
-        
-        # .order_by(sort_field)
-  # Show all items in category
-
-    # latest_foods=FoodItems.objects.filter(category=category)
-    # return render(request, 'food_list.html', {'latest_foods': latest_foods})
-    # ,'query': query,'sort_by': sort_by,})
-
 @login_required(login_url='login') 
 def add_to_cart(request, food_id):
     cart = request.session.get('cart', {})
@@ -214,21 +164,11 @@ def checkout(request):
 
     return redirect('order_summary', order_id=order.id)
 
-# def food_list(request):
-#     category_id = request.GET.get('category_id')
-#     if category_id:
-#         latest_foods = FoodItems.objects.filter(category_id=category_id)
-    
-#     return render(request, 'food_list.html', {'latest_foods': latest_foods,'query': query,'sort_by': sort_by,})
-
 
 def food_list(request):
     category_id = request.GET.get('category_id')  # Get category ID from request
     query = request.GET.get('q', '')  # Get search query
     sort_by = request.GET.get('sort', '')  # Get sorting option
-
-    # sort_by = request.GET.get('sort')  
-
 
     # Define valid sorting fields
     valid_sort_fields = {
@@ -241,15 +181,10 @@ def food_list(request):
     # Ensure the selected sort option is valid
     # sort_field = valid_sort_fields.get(sort_by, 'name')
 
-
     sort_field = valid_sort_fields.get(sort_by, 'f_stock')
     sort_field = valid_sort_fields.get(sort_by, 'price')
     sort_field = valid_sort_fields.get(sort_by, 'created_at')
-    # sort_field = valid_sort_fields.get(sort_by, 'name')
-
-
-
-
+    
     latest_foods = FoodItems.objects.all()  # Default: fetch all food items
 
     if category_id:  # Ensure category_id is a valid number

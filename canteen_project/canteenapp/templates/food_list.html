@@ -168,7 +168,7 @@
         .quantity-box {
             display: flex;
             align-items: center;
-            background-color: #42d032; /* Green background */
+            background-color: #2ba01e; /* Green background */
             border-radius: 10px;
             padding: 8px;
             gap: 10px;
@@ -194,7 +194,8 @@
         }
 
         .cart-btn {
-            margin-left: 10px;  /* To add space between quantity box and Add to Cart button */
+            margin-left: 10px;  
+            font-size: 17px;
         }
 
     </style>
@@ -238,6 +239,8 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </form>
+            <a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart" style="font-size: 30px;color: #000000;"></i>
+
         </div>
         
         <!-- Display Grid for Food Items -->
@@ -252,18 +255,22 @@
                         <p class="description">{{ food.description }}</p>
                     </div>
                     <span class="price">Price: ₹{{ food.price }}</span>
-                    {% if user.is_authenticated %}
+                    
                     <div class="quantity-container">
                         <!-- Combined 'Qty' label and input field in the same box -->
                         <div class="quantity-box">
                             <span class="qty-label">Qty:</span>
                             <input type="number" name="quantity" value="1" min="1" max="{{ food.f_stock }}" class="quantity-input" />
                         </div>
+                        {% if user.is_authenticated %}
                         <button type="submit" class="cart-btn">Add to Cart</button>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="cart-btn">Add to cart</a>
+
+                        {% endif %}
+
                     </div>
-                    {% else %}
-                    <p style="color: red; font-size: 14px;">You must <a href="{% url 'login' %}">log in</a> to add items to the cart.</p>
-                    {% endif %}
+                    
                 </form>
             </div>
             {% empty %}
