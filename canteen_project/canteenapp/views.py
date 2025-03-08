@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import FoodItems,orders,OrderItems
 from .models import Category
 from datetime import datetime
+from django.urls import reverse
 
 # Create your views here.
 
@@ -219,7 +220,11 @@ def add_to_cart(request, food_id):
         }
 
     request.session['cart'] = cart
-    return redirect('view_cart')
+    category_id = request.POST.get('category_id')  # Get category_id from URL
+    if category_id:
+        return redirect(f"{reverse('food_list')}?category_id={category_id}")
+    return redirect('food_list')  # Default redirect if no category_id
+
 
 
 def view_cart(request):
