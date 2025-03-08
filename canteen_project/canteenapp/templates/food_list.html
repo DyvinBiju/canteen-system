@@ -194,7 +194,8 @@
         }
 
         .cart-btn {
-            margin-left: 10px;  /* To add space between quantity box and Add to Cart button */
+            margin-left: 10px;  
+            font-size: 17px;
         }
 
     </style>
@@ -238,6 +239,8 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </form>
+            <a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart" style="font-size: 30px;color: #000000;"></i>
+
         </div>
         
         <!-- Display Grid for Food Items -->
