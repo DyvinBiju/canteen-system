@@ -90,9 +90,14 @@ def layout(request):
 
 def bill(request):
     cart = request.session.get('cart', {})
-    total_price = sum(float(item['price']) * item['quantity'] for item in cart.values())
     current_date = datetime.now().strftime('%Y-%m-%d')  # Format date as "YYYY-MM-DD"
-    
+    total_price = 0
+    for food_id, item in cart.items():
+        item_price = float(item['price'])  # Ensure price is a float
+        item_quantity = int(item['quantity'])  # Ensure quantity is an integer
+        item_total = item_price * item_quantity  # Correct total calculation
+        item['total'] = round(item_total, 2)  # Round to 2 decimal places
+        total_price += item_total  # Add to grand total
     context = {
         'cart': cart,
         'total_price': total_price,
@@ -260,3 +265,19 @@ def checkout(request):
         request.session['cart'] = {}  # Clear the cart
 
     return redirect('order_summary', order_id=order.id)
+
+@login_required
+def order_history(request):
+    user_orders = orders.objects.filter(student=request.user).order_by('-order_date')
+    
+    order_data = []
+    for order in user_orders:
+        order_items = OrderItems.objects.filter(orders=order)
+        total_price = sum(item.price for item in order_items)  # Calculate total for each order
+        order_data.append({
+            'order': order,
+            'items': order_items,
+            'total_price': total_price  # Include total price
+        })
+
+    return render(request, 'order_history.html', {'order_data': order_data})
