@@ -127,7 +127,7 @@
       <div class="col-sm-6 col-md-4 mx-auto">
          <div class="box">
            <div class="img-box">
-             <img src="{{ category.image.url }}" class="box-img" alt="">
+            <a href="{% url 'food_list' %}?category_id={{ category.id }}"><img src="{{ category.image.url }}" class="box-img" alt=""></a>
            </div>
            <div class="detail-box">
              <h4>
