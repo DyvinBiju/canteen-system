@@ -130,11 +130,11 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
-        .stock {
+        /* .stock {
             color: #42d032;
             padding-top: 8px;
             font-size: 17px;
-        }
+        } */
 
         .frm {
             position: relative;
@@ -197,6 +197,52 @@
             margin-left: 10px;  
             font-size: 17px;
         }
+        .fa-shopping-cart{
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            font-size: 30px;
+        }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: red;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 3px 6px;
+        }
+
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            z-index: 1000;
+        }
+
+        .alert {
+            /* padding: 15px;
+            border-radius: 5px;
+            color: white; */
+            /* background-color: green;  */
+            /* text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
+            animation: fadeOut 4s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
 
     </style>
 
@@ -221,6 +267,19 @@
 </head>
 
 <body>
+
+    <!-- message -->
+    {% if messages %}
+<div class="alert-container">
+    {% for message in messages %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<!-- end-message -->
+
     <!-- Food Listing Section -->
     <section class="menu">
         <div class="search_n_sort_container">
@@ -239,7 +298,17 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </form>
-            <a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart" style="font-size: 30px;color: #000000;"></i>
+            <a href="{% url 'view_cart' %}">
+                <i class="fa fa-shopping-cart">
+                    <span class="cart-count">
+                        {% if request.session.cart_count %}
+                        {{ request.session.cart_count }}
+                        {% else %}
+                        0
+                        {% endif %}
+                    </span>
+                </i>
+            </a>
 
         </div>
         

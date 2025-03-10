@@ -225,6 +225,9 @@ def add_to_cart(request, food_id):
         }
 
     request.session['cart'] = cart
+    request.session['cart_count'] = len(cart)
+    messages.success(request,f"{food_item.name} successfully added to cart")
+
     category_id = request.POST.get('category_id')  # Get category_id from URL
     if category_id:
         return redirect(f"{reverse('food_list')}?category_id={category_id}")
@@ -245,11 +248,14 @@ def view_cart(request):
 
 def remove_from_cart(request, food_id):
     cart = request.session.get('cart', {})
-
+    food_item = get_object_or_404(FoodItems, id=food_id)
     if str(food_id) in cart:
         del cart[str(food_id)]
 
     request.session['cart'] = cart
+    request.session['cart_count'] = len(cart)
+    messages.success(request,f"{food_item.name} successfully removed from cart")
+
     return redirect('view_cart')
 
 @login_required
