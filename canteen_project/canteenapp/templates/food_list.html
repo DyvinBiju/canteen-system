@@ -247,8 +247,9 @@
         <div class="food-grid">
             {% for food in latest_foods %}
             <div class="food-card">
-                <form action="{% url 'add_to_cart' food.id %}" method="POST">
+                <form action="{% url 'add_to_cart' food.id %}?category_id={{ request.GET.category_id }}" method="POST">
                     {% csrf_token %}
+                    <input type="hidden" name="category_id" value="{{ request.GET.category_id }}">
                     <img src="{{ food.image.url }}" alt="Food Image" class="food-image">
                     <h3 class="name">{{ food.name | upper}}</h3>
                     <div class="description-container">
