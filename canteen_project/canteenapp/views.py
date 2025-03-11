@@ -7,8 +7,14 @@ from .models import FoodItems,orders,OrderItems
 from .models import Category
 from datetime import datetime
 from django.urls import reverse
+from django.http import FileResponse
+from reportlab.pdfgen import canvas # type: ignore
+import io
+from reportlab.lib.pagesizes import letter # type: ignore
+from reportlab.lib import colors # type: ignore
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
+from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from .models import UserProfile
-
 # Create your views here.
 
 def index(request):
@@ -180,24 +186,24 @@ def view_cart(request):
 
     return render(request, 'view_cart.html', {'cart': updated_cart, 'total_price': total_price})
 
-@login_required
-def checkout(request):
-    cart = request.session.get('cart', {})
+# @login_required
+# def checkout(request):
+#     cart = request.session.get('cart', {})
 
-    if cart:
-        order = orders.objects.create(student=request.user)
+#     if cart:
+#         order = orders.objects.create(student=request.user)
 
-        for food_id, item in cart.items():
-            food_item = FoodItems.objects.get(id=food_id)
-            OrderItems.objects.create(
-                food=food_item,
-                orders=order,
-                quantity=item['quantity'],
-                price=food_item.price * item['quantity']
-            )
-        request.session['cart'] = {}  # Clear the cart
+#         for food_id, item in cart.items():
+#             food_item = FoodItems.objects.get(id=food_id)
+#             OrderItems.objects.create(
+#                 food=food_item,
+#                 orders=order,
+#                 quantity=item['quantity'],
+#                 price=food_item.price * item['quantity']
+#             )
+#         request.session['cart'] = {}  # Clear the cart
 
-    return redirect('order_summary', order_id=order.id)
+#     return redirect('order_summary', order_id=order.id)
 
 
 def food_list(request):
@@ -291,20 +297,82 @@ def remove_from_cart(request, food_id):
 def checkout(request):
     cart = request.session.get('cart', {})
 
-    if cart:
-        order = orders.objects.create(student=request.user)
+    if not cart:
+        messages.error(request, "Your cart is empty.")
+        return redirect('view_cart')
 
-        for food_id, item in cart.items():
-            food_item = FoodItems.objects.get(id=food_id)
-            OrderItems.objects.create(
-                food=food_item,
-                orders=order,
-                quantity=item['quantity'],
-                price=food_item.price * item['quantity']
-            )
-        request.session['cart'] = {}  # Clear the cart
+    # Create Order and save to database
+    order = orders.objects.create(student=request.user)
 
-    return redirect('order_summary', order_id=order.id)
+    # Prepare PDF buffer
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    # Add title
+    elements.append(Paragraph("<strong>Delfood</strong>", styles['Title']))
+    # elements.append(Paragraph(" Holy Cross Collage Cherpunkal,Kottayam,Kerala", styles['Normal']))
+    # elements.append(Paragraph("Phone: +91 XXXXXXXXXX", styles['Normal']))
+    elements.append(Spacer(1, 20))
+
+    # Add customer details
+    elements.append(Paragraph(f"<b>Customer Name:</b> {request.user.username.upper()}", styles['Normal']))
+    elements.append(Paragraph(f"<b>Date:</b> {datetime.now().strftime('%Y-%m-%d %H:%M')}", styles['Normal']))
+    elements.append(Spacer(1, 10))
+
+    # Table Headers
+    data = [["Item Name", "Quantity", "Price (₹)", "Total (₹)"]]
+    total_price = 0
+
+    for food_id, item in cart.items():
+        food_item = FoodItems.objects.get(id=food_id)
+
+        # Save order items in database
+        OrderItems.objects.create(
+            food=food_item,
+            orders=order,
+            quantity=item['quantity'],
+            price=food_item.price * item['quantity']
+        )
+
+        item_total = food_item.price * item['quantity']
+        total_price += item_total
+
+        data.append([item['name'], item['quantity'], f"₹{item['price']}", f"₹{item_total}"])
+
+    # Add total row
+    data.append(["", "", "Grand Total", f"₹{total_price}"])
+
+    # Create table with styles
+    table = Table(data, colWidths=[200, 80, 100, 100])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    elements.append(table)
+    elements.append(Spacer(1, 20))
+
+    # Footer
+    elements.append(Paragraph("Thank you for ordering with us!", styles['Italic']))
+    elements.append(Paragraph("Visit again!", styles['Italic']))
+
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+
+    # Clear the cart after order completion
+    request.session['cart'] = {}
+
+    # Return PDF as response
+    response = FileResponse(buffer, as_attachment=True, filename=f"Bill_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
+    return response
 
 @login_required
 def order_history(request):
