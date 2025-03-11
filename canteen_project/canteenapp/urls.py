@@ -5,7 +5,7 @@ from . import views
 from .views import add_to_cart, view_cart, remove_from_cart, checkout
 from django.conf import settings
 from .views import signup_view, login_view, logout_view, home, index, profile_view
-
+from .views import increase_quantity, decrease_quantity
 urlpatterns = [
 
 path('', home, name='home'),   
@@ -25,7 +25,8 @@ path('remove_from_cart/<int:food_id>/', remove_from_cart, name='remove_from_cart
 path('checkout/', checkout, name='checkout'),
 path('add_to_cart/<int:food_id>/', views.add_to_cart, name='add_to_cart'),
 path('order_history/', views.order_history, name='order_history'),
-
+path('increase-quantity/<str:food_id>/', increase_quantity, name='increase_quantity'),
+path('decrease-quantity/<str:food_id>/', decrease_quantity, name='decrease_quantity'),
 ]
 
 if settings.DEBUG:
