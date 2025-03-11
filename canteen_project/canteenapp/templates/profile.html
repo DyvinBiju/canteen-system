@@ -38,6 +38,14 @@
             width: 480px;
         }
 
+        .form-group1 {
+            margin-bottom: 15px;
+            text-align: left;
+            color:rgb(0, 0, 0);
+            width: 96px;
+            
+        }
+
         label {
             display: block;
             font-weight: bold;
@@ -125,27 +133,28 @@
         {% endif %}
 
         <!-- Profile Picture Upload -->
-        <img id="profilePreview" class="profile-picture" src="{% static 'images/default-profile.png' %}" alt="Profile Picture">
-        
-        <input type="file" id="profilePictureInput" accept="image/*" class="profile-picture_file">
+        <img id="profilePreview" class="profile-picture" src="{% if request.user.userprofile.profile_picture %}{{ request.user.userprofile.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Picture">
 
         <form method="POST" enctype="multipart/form-data" action="{% url 'profile' %}">
             {% csrf_token %}
             <div class="form-group">
+                <div class="form-group1">
+                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*">
+                </div>
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ user.username }}" class="readonly" readonly>
+                <input type="text" id="username" name="username" value="{{ request.user.username }}" class="readonly" readonly>
             </div>
             <div class="form-group">
                 <label for="first_name">First Name</label>
-                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+                <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}">
             </div>
             <div class="form-group">
                 <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+                <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ user.email }}">
+                <input type="email" id="email" name="email" value="{{ request.user.email }}">
             </div>
             <button type="submit" class="btn btn-primary">Update Profile</button>
             <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>

@@ -4,7 +4,6 @@ from django.conf.urls.static import static
 from . import views
 from .views import add_to_cart, view_cart, remove_from_cart, checkout
 from django.conf import settings
-from .views import signup_view, login_view, logout_view, home, index, profile_view
 
 urlpatterns = [
 
