@@ -8,12 +8,13 @@ from .models import Category
 from datetime import datetime
 from django.urls import reverse
 from django.http import FileResponse
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen import canvas # type: ignore
 import io
-from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter # type: ignore
+from reportlab.lib import colors # type: ignore
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
+from reportlab.lib.styles import getSampleStyleSheet # type: ignore
+from .models import UserProfile
 # Create your views here.
 
 def index(request):
@@ -71,23 +72,51 @@ def logout_view(request):
     return redirect('home')
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile
+from django.contrib import messages
+
 @login_required
 def profile_view(request):
     if request.method == 'POST':
+        # Update user's profile information
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        profile_picture = request.FILES.get('profile_picture')
 
+        # Update the user's basic information
         user = request.user
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
         user.save()
 
+        # Update or create the UserProfile for the current user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+
+        # Update the profile picture if a file was uploaded
+        if profile_picture:
+            user_profile.profile_picture = profile_picture
+            user_profile.save()
+            messages.success(request, 'Profile picture updated successfully!')
+        else:
+            messages.warning(request, 'No file was uploaded.')
+
         messages.success(request, "Profile updated successfully!")
-        return render(request, 'profile.html')  # Render instead of redirect
+        return redirect('profile')  # Redirect to the profile page after updating
 
     return render(request, 'profile.html')
+
+def profile_pictures(request):
+    user_image = request.POST.get('profile_pictures')
+
+    return render(request, 'profile.html')
+
+    
+
+
 
 
     
