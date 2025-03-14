@@ -213,6 +213,7 @@
                 {% endfor %}
 
                 <div class="cart-summary">
+                    <a href="{% url 'food_list' %}" class="home-button"> food list </a>  
                     <div class="checkout">
                         <a href="{% url 'bill' %}" class="btn btn-success">Proceed to Checkout</a>
                     </div>
@@ -224,7 +225,7 @@
                 <p style="color: beige;">Your cart is empty. <a href="{% url 'food_list' %}" style="color: rgb(98, 238, 33);">Browse food items</a></p>
             {% endif %}
         </div>
-        <a href="{% url 'home' %}" class="home-button"> << Home </a>  
+        
     </div>
 </body> 
 {% endblock %}
