@@ -322,7 +322,7 @@ def checkout(request):
 
     if not cart:
         messages.error(request, "Your cart is empty.")
-        return redirect('view_cart')
+        return redirect('home')
 
     # Create Order and save to database
     order = orders.objects.create(student=request.user)
@@ -345,7 +345,7 @@ def checkout(request):
     elements.append(Spacer(1, 10))
 
     # Table Headers
-    data = [["Item Name", "Quantity", "Price (₹)", "Total (₹)"]]
+    data = [["Item Name", "Quantity", "Price (Rs)", "Total (Rs)"]]
     total_price = 0
 
     for food_id, item in cart.items():
@@ -362,10 +362,10 @@ def checkout(request):
         item_total = food_item.price * item['quantity']
         total_price += item_total
 
-        data.append([item['name'], item['quantity'], f"₹{item['price']}", f"₹{item_total}"])
+        data.append([item['name'], item['quantity'], f"{item['price']}", f"{item_total}"])
 
     # Add total row
-    data.append(["", "", "Grand Total", f"₹{total_price}"])
+    data.append(["", "", "Grand Total", f"Rs {total_price}"])
 
     # Create table with styles
     table = Table(data, colWidths=[200, 80, 100, 100])
@@ -412,3 +412,26 @@ def order_history(request):
         })
 
     return render(request, 'order_history.html', {'order_data': order_data})
+
+def increase_quantity(request, food_id):
+    cart = request.session.get('cart', {})
+
+    if food_id in cart:
+        cart[food_id]['quantity'] += 1
+        cart[food_id]['total'] = cart[food_id]['quantity'] * cart[food_id]['price']
+    
+    request.session['cart'] = cart  # Save updated cart in session
+    return redirect('view_cart')
+
+def decrease_quantity(request, food_id):
+    cart = request.session.get('cart', {})
+
+    if food_id in cart:
+        if cart[food_id]['quantity'] > 1:
+            cart[food_id]['quantity'] -= 1
+            cart[food_id]['total'] = cart[food_id]['quantity'] * cart[food_id]['price']
+        else:
+            del cart[food_id]  # Remove item if quantity reaches 0
+
+    request.session['cart'] = cart  # Save updated cart in session
+    return redirect('view_cart')

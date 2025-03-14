@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ordered Foods List</title>
     <style>
-
         .mycart-container {
         background: rgba(0, 234, 255, 0.259); /* Semi-transparent blue background */
         backdrop-filter: blur(10px); /* Adds a frosted glass effect */
@@ -72,8 +71,8 @@
         }
 
         .item-details {
-        flex-grow: 1;
-        text-align: left;
+            flex-grow: 1;
+            text-align: left;
         }
 
         .item-details h3 {
@@ -86,13 +85,18 @@
             color: #000000;
         }
 
+        .btn-danger, .btn-success {
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
         .btn-danger {
-        background-color: red;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
+            background-color: red;
         }
 
         .btn-success {
@@ -105,7 +109,7 @@
         text-decoration: none;
         display: inline-block;
         }
-        
+
         .btn-success:hover {
             background-color: #d4ff00;
             transform: scale(1.02);
@@ -113,12 +117,10 @@
             color: black;
         }
 
-        .total-price h2 {
-        font-size: 22px;
-        }
-
         .cart-actions {
-            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .cart-summary {
@@ -140,14 +142,6 @@
         }
 
         .alert {
-            /* padding: 15px;
-            border-radius: 5px;
-            color: white; */
-            /* background-color: green;  */
-            /* text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
             animation: fadeOut 4s forwards;
         }
 
@@ -181,7 +175,7 @@
     </style>
 </head>
 <body>
-    <!-- message -->
+    <!-- Message -->
     {% if messages %}
 <div class="alert-container">
     {% for message in messages %}
@@ -210,6 +204,9 @@
                             <p>Total: ₹{{ item.total }}</p>
                         </div>
                         <div class="cart-actions">
+                            <a href="{% url 'decrease_quantity' food_id %}" class="btn btn-danger">-</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{% url 'increase_quantity' food_id %}" class="btn btn-success">+</a>
                             <a href="{% url 'remove_from_cart' food_id %}" class="btn btn-danger">Remove</a>
                         </div>
                     </div>
