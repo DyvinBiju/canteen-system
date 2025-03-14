@@ -79,47 +79,70 @@ from django.contrib import messages
 
 @login_required
 def profile_view(request):
+    # Fetch the user's profile
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    # Render the profile page
+    return render(request, 'profile.html', {'user_profile': user_profile})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import UserProfile
+
+@login_required
+def profile_view(request):
+    """
+    View to display the user's profile.
+    """
+    user_profile = UserProfile.objects.filter(user=request.user).first()  # Fetch without creating
+    return render(request, 'profile.html', {'user_profile': user_profile})
+
+@login_required
+def edit_profile(request):
+    """
+    View to handle editing the user's profile.
+    """
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
-        # Update user's profile information
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+        full_name = request.POST.get('username')
         email = request.POST.get('email')
         profile_picture = request.FILES.get('profile_picture')
 
-        # Update the user's basic information
+        # Update user's email
         user = request.user
-        user.first_name = first_name
-        user.last_name = last_name
         user.email = email
         user.save()
 
-        # Update or create the UserProfile for the current user
-        user_profile, created = UserProfile.objects.get_or_create(user=user)
-
-        # Update the profile picture if a file was uploaded
+        # Update UserProfile (create if missing)
+        user_profile.full_name = full_name
         if profile_picture:
+            user_profile.profile_picture = profile_picture
+        user_profile.save()
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect('profile')  # Redirect to profile after updating
+
+    return render(request, 'edit_profile.html', {'user_profile': user_profile})
+
+@login_required
+def upload_profile_picture(request):
+    """
+    View to handle uploading a profile picture.
+    """
+    if request.method == 'POST':
+        profile_picture = request.FILES.get('profile_picture')
+        if profile_picture:
+            user_profile, created = UserProfile.objects.get_or_create(user=request.user)
             user_profile.profile_picture = profile_picture
             user_profile.save()
             messages.success(request, 'Profile picture updated successfully!')
         else:
             messages.warning(request, 'No file was uploaded.')
-
-        messages.success(request, "Profile updated successfully!")
-        return redirect('profile')  # Redirect to the profile page after updating
-
-    return render(request, 'profile.html')
-
-def profile_pictures(request):
-    user_image = request.POST.get('profile_pictures')
-
-    return render(request, 'profile.html')
-
-    
+        return redirect('profile')
 
 
-
-
-    
 
 def layout(request):
     return render(request,'layout.html')

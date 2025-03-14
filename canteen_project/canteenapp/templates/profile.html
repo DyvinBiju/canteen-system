@@ -1,176 +1,177 @@
-{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profile Page</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
     <style>
-        /* General Styles */
+        /* Set full-screen background image */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .container {
-            width: 90%;
-            max-width: 500px;
-            margin: 50px auto;
-            background: rgb(89, 116, 197);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h2 {
-            color: #000000;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-            color: #ffffff;
-            width: 480px;
-        }
-
-        .form-group1 {
-            margin-bottom: 15px;
-            text-align: left;
-            color:rgb(0, 0, 0);
-            width: 96px;
-            
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input {
+        /* Background image with blur effect */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            height: 100%;
+            background: url('https://t3.ftcdn.net/jpg/01/54/14/86/360_F_154148685_yvijeC6L2SFpvqFJ5H1lunPg40FzCAf1.jpg') no-repeat center center/cover;
+            filter: blur(8px);
+            z-index: -1;
         }
 
-        .readonly {
-            background-color: #e9ecef;
-            cursor: not-allowed;
+        /* Glassmorphism Effect Card */
+        .popup-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Profile Picture */
+        /* Profile picture with glowing effect */
         .profile-picture {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #fff;
-            display: block;
-            margin: 0 auto 10px;
+            border: 4px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Styling for Full Name and Email labels */
+        .info-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: rgb(0, 0, 0);
+            margin-top: 10px;
+        }
+
+        /* Box for Name & Email values only */
+        .info-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 250px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 500;
+            color: rgb(255, 255, 255);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 10px;
         }
 
         /* Buttons */
-        .btn {
+        .edit-button, .upload-button {
             display: inline-block;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
+            padding: 12px 20px;
+            margin-top: 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            margin: 5px;
+            transition: 0.3s ease;
+            font-weight: 500;
+            border: none;
+            outline: none;
         }
 
-        .btn-primary {
-            background: #007bff;
-            color: white;
+        .edit-button {
+            background: linear-gradient(45deg, #cbef02, #06e1a3);
         }
 
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
+        .edit-button:hover {
+            background: linear-gradient(45deg, #eef112, #09f3d7);
+            transform: scale(1.05);
         }
 
-        .btn:hover {
-            opacity: 0.8;
+        .upload-button {
+            background: linear-gradient(45deg, #d2e108, #06e8d9);
         }
 
-        /* Alert Message */
-        .alert {
-            padding: 10px;
-            background: #28a745;
-            color: white;
-            text-align: center;
-            border-radius: 5px;
-            margin-bottom: 15px;
+        .upload-button:hover {
+            background: linear-gradient(45deg, #07e07b, #3ac015);
+            transform: scale(1.05);
         }
-        .profile-picture_file{
-            width: 210px;
-            height: 10px;
-            background-color: #6c757d;
+
+        /* Home Button - Smaller & Bottom Left */
+        .home-button {
+            background: linear-gradient(45deg, #000000, #f80505);
+            padding: 8px 14px;
+            font-size: 14px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: #ffffff;
+        }
+
+        .home-button:hover {
+            background: linear-gradient(45deg, #ebe8e7, #04ffea);
+            transform: scale(1.05);
+            color: #000000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .popup-card {
+                width: 95%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>User Profile</h2>
+    <div class="popup-card">
+        <h1>Profile</h1>
+        <div>
+            {% if user_profile.profile_picture %}
+                <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+            {% else %}
+                <p>No profile picture uploaded.</p>
+            {% endif %}
+            
+            <!-- Labels outside, only values inside the box -->
+            <p class="info-label">Full Name:</p>
+            <div class="info-box">{{ user.username }}</div>
 
-        <!-- Alert Messages -->
-        {% if messages %}
-            <div class="alert">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
+            <p class="info-label">Email:</p>
+            <div class="info-box">{{ user.email }}</div>
+        </div>
 
-        <!-- Profile Picture Upload -->
-        <img id="profilePreview" class="profile-picture" src="{% if request.user.userprofile.profile_picture %}{{ request.user.userprofile.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Picture">
-
-        <form method="POST" enctype="multipart/form-data" action="{% url 'profile' %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'upload_profile_picture' %}" id="upload-form">
             {% csrf_token %}
-            <div class="form-group">
-                <div class="form-group1">
-                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*">
-                </div>
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ request.user.username }}" class="readonly" readonly>
-            </div>
-            <div class="form-group">
-                <label for="first_name">First Name</label>
-                <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}">
-            </div>
-            <div class="form-group">
-                <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ request.user.email }}">
-            </div>
-            <button type="submit" class="btn btn-primary">Update Profile</button>
-            <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+            <input type="file" name="profile_picture" accept="image/*" style="display: none;" id="profile-picture-input">
+            <button style="color: #000000;" type="button" class="upload-button" onclick="document.getElementById('profile-picture-input').click()">Upload Image</button>
         </form>
+
+        <a style="color: #000000;" href="{% url 'edit_profile' %}" class="edit-button">Edit Profile</a>
+
+        <!-- Home Button at Bottom Left -->
+        <a href="{% url 'home' %}" class="home-button"> << Home </a>
     </div>
 
     <script>
-        document.getElementById('profilePictureInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profilePreview').src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
+        document.getElementById('profile-picture-input').addEventListener('change', function() {
+            document.getElementById('upload-form').submit();
         });
     </script>
 </body>

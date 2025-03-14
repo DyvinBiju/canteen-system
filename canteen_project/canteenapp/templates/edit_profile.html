@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        /* Full-screen background with blur */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://media.istockphoto.com/id/1168659055/photo/various-indian-dishes-featuring-rogan-josh-chicken-tikka-masala-biryani-tandoori-chicken.jpg?s=612x612&w=0&k=20&c=UQHwCReZcVv4gYf7JOz0unQbDKkvmIHf4cjih-EkSLY=') no-repeat center center/cover;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* Glassmorphism effect */
+        .popup-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Circular profile picture */
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            display: block;
+            margin: 0 auto 15px;
+        }
+
+        /* Input Fields */
+        .input-container {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-container label {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgb(0, 0, 0);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Buttons */
+        .save-button, .cancel-button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 10px 5px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            outline: none;
+            color: white;
+        }
+
+        .save-button {
+            background: linear-gradient(45deg, #cbef02, #06e1a3);
+            color: #000000;
+        }
+
+        .save-button:hover {
+            background: linear-gradient(45deg, #eef112, #09f3d7);
+            transform: scale(1.05);
+        }
+
+        .cancel-button {
+            background: linear-gradient(45deg, #f44336, #e53935);
+            color: #d2e082;
+        }
+
+        .cancel-button:hover {
+            background: linear-gradient(45deg, #ff5f5f, #d32f2f);
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .popup-card {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-card">
+        <h1>Edit Profile</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Profile Picture Preview -->
+            {% if user_profile.profile_picture %}
+                <img id="profilePreview" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+            {% else %}
+                <img id="profilePreview" src="https://via.placeholder.com/120" alt="Default Profile" class="profile-picture">
+            {% endif %}
+
+            <div class="input-container">
+                <label style="color: #000000;" for="full_name">Full Name:</label>
+                <input type="text" id="full_name" name="full_name" class="input-field" value="{{ user.username }}">
+            </div>
+
+            <div class="input-container">
+                <label style="color: #000000;" for="email">Email:</label>
+                <input type="email" id="email" name="email" class="input-field" value="{{ user.email }}">
+            </div>
+
+            <div class="input-container">
+                <label for="profile_picture">Profile Picture:</label>
+                <input type="file" id="profile_picture" name="profile_picture" class="input-field" accept="image/*" onchange="previewProfilePicture(event)">
+            </div>
+
+            <button type="submit" class="save-button">Save Changes</button>
+            <a href="{% url 'profile' %}" class="cancel-button">Cancel</a>
+        </form>
+    </div>
+
+    <script>
+        function previewProfilePicture(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
