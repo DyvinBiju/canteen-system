@@ -41,10 +41,36 @@
         .total-row {
             font-weight: bold;
             text-align: right;
+            margin-bottom: 0;
+            padding-top: 10px;
+
         }
         .total-price {
             color: #000000;
-            font-size: 20px;
+            font-size: 30px;
+        }
+        .feedback-section {
+            text-align: right;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        .feedback-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background-color: #007bff;
+            color: white;
+        }
+        .feedback-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -81,6 +107,10 @@
                     </table>
                     
                     <h2 class="total-row">Grand Total: <span class="total-price">₹{{ order.total_price }}</span></h2>
+                    
+                    <div class="feedback-section">
+                        <a href="{% url 'feedback' %}" class="feedback-btn">Give Feedback</a>
+                    </div>
                     <hr>
                 </div>
             {% endfor %}
