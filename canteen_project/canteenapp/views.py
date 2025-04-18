@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import FoodItems,orders,OrderItems
+from .models import Feedback, FoodItems,orders,OrderItems
 from .models import Category
 from datetime import datetime
 from django.urls import reverse
@@ -392,6 +392,8 @@ def checkout(request):
 
     # Clear the cart after order completion
     request.session['cart'] = {}
+    request.session['cart_count'] = 0
+    request.session.modified = True
 
     # Return PDF as response
     response = FileResponse(buffer, as_attachment=True, filename=f"Bill_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
@@ -435,3 +437,51 @@ def decrease_quantity(request, food_id):
 
     request.session['cart'] = cart  # Save updated cart in session
     return redirect('view_cart')
+
+
+@login_required
+def give_feedback(request):
+    user = request.user
+    current_order_id = request.session.get('current_order_id')
+
+    if not current_order_id:
+        messages.error(request, "No recent order found.")
+        return redirect('home')
+
+    # Get the current order and its items
+    current_order = get_object_or_404(orders, id=current_order_id, student=user)
+    ordered_items = OrderItems.objects.filter(orders=current_order)
+
+    # Get the food items from the current order
+    purchased_items = FoodItems.objects.filter(
+        id__in=ordered_items.values_list('food_id', flat=True)
+    ).distinct()
+
+    # Get any existing feedback for those items
+    feedback_dict = {
+        feedback.food_item.id: feedback.rating
+        for feedback in Feedback.objects.filter(student=user, food_item__in=purchased_items)
+    }
+
+    items_with_ratings = []
+    for item in purchased_items:
+        items_with_ratings.append({
+            'item': item,
+            'rating': feedback_dict.get(item.id, 0)
+        })
+
+    if request.method == 'POST':
+        for entry in items_with_ratings:
+            item = entry['item']
+            rating = request.POST.get(f'rating_{item.id}')
+            if rating:
+                Feedback.objects.update_or_create(
+                    student=user,
+                    food_item=item,
+                    defaults={'rating': int(rating)}
+                )
+        return redirect('home')
+
+    return render(request, 'feedback.html', {
+        'items_with_ratings': items_with_ratings
+    })

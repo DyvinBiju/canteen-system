@@ -1,21 +1,107 @@
-{%extends 'layout.html'%}
-{%load static%}
+{% extends 'layout.html' %}
+{% load static %}
+{% block contents %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>feedback</title>
-</head>
-<body>
-     
-{%block contents%}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <style>
+    .feedback-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 1em;
+    }
+    .feedback-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1em;
+      width: 250px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .feedback-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 0.5em;
+    }
 
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+    }
 
+    .star-rating i {
+      font-size: 20px;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
 
-{%endblock%}
-</body>
+    .star-rating i.selected {
+      color: #f5b301;
+    }
+  </style>
 
-</html>
+  <h2>Give Feedback</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="feedback-container">
+      {% for entry in items_with_ratings %}
+        <div class="feedback-card">
+          <img src="{{ entry.item.image.url }}" alt="{{ entry.item.name }}">
+          <h4>{{ entry.item.name }}</h4>
+
+          <div class="star-rating" data-item-id="{{ entry.item.id }}" data-initial-rating="{{ entry.rating }}">
+            {% for i in "12345" %}
+              <i class="fa-star fa-regular" data-value="{{ i }}"></i>
+            {% endfor %}
+            <input type="hidden" name="rating_{{ entry.item.id }}" id="rating_{{ entry.item.id }}" value="{{ entry.rating }}">
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit">Submit Feedback</button>
+  </form>
+
+  <script>
+    document.querySelectorAll('.star-rating').forEach(ratingDiv => {
+      const stars = ratingDiv.querySelectorAll('i');
+      const input = ratingDiv.querySelector('input');
+      const initialRating = parseInt(ratingDiv.dataset.initialRating);
+
+      // Pre-fill stars on page load
+      if (initialRating) {
+        stars.forEach((s, i) => {
+          s.classList.toggle('fa-solid', i < initialRating);
+          s.classList.toggle('fa-regular', i >= initialRating);
+          s.classList.toggle('selected', i < initialRating);
+        });
+      }
+
+      // Handle star clicks
+      stars.forEach((star, idx) => {
+        star.addEventListener('click', () => {
+          const val = idx + 1;
+          input.value = val;
+          stars.forEach((s, i) => {
+            s.classList.toggle('fa-solid', i < val);
+            s.classList.toggle('fa-regular', i >= val);
+            s.classList.toggle('selected', i < val);
+          });
+        });
+      });
+    });
+  </script>
+  </body>
+  </html>
+{% endblock %}

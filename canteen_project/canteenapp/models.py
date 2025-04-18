@@ -43,11 +43,11 @@ class Feedback(TimeStampedModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     food_item = models.ForeignKey(FoodItems, on_delete=models.CASCADE, null=True, blank=True)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rating from 1 to 5
-    comments = models.TextField(blank=True)
+    # comments = models.TextField(blank=True)
     submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.comments
+        return self.food_item.name
 
 class OrderItems(TimeStampedModel):
      food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)

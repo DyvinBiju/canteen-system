@@ -20,7 +20,6 @@ path('profile/upload-picture/', views.upload_profile_picture, name='upload_profi
 path('index/', views.index, name='index'),
 path('', views.home, name='home'),
 path('layout/', views.layout, name='layout'),
-# path('feedback/', views.feedback, name='feedback'),
 path('bill/', views.bill, name='bill'),
 path('food_list/', views.food_list, name='food_list'),
 path('view_cart/', views.view_cart, name='view_cart'),
@@ -30,6 +29,8 @@ path('add_to_cart/<int:food_id>/', views.add_to_cart, name='add_to_cart'),
 path('order_history/', views.order_history, name='order_history'),
 path('increase-quantity/<str:food_id>/', increase_quantity, name='increase_quantity'),
 path('decrease-quantity/<str:food_id>/', decrease_quantity, name='decrease_quantity'),
+path('feedback/', views.give_feedback, name='feedback'),
+
 ]
 
 if settings.DEBUG:
