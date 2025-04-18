@@ -233,10 +233,13 @@
 <section class="menu">
     <div class="search_n_sort_container">
         <select id="sort-options" onchange="sortFoodItems()">
-            <option disabled selected>Sort Food</option>
+            <option disabled {% if not sort_by %}selected{% endif %}>Sort Food</option>
             <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>By Date</option>
             <option value="price" {% if sort_by == "price" %}selected{% endif %}>By Price</option>
+            <option value="name" {% if sort_by == "name" %}selected{% endif %}>By Name</option>
+            <option value="avg_rating" {% if sort_by == "avg_rating" %}selected{% endif %}>By Rating</option>
         </select>
+        
         <form class="form-inline" method="get">
             <input type="hidden" name="category_id" value="{{ category_id }}">
             <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}">

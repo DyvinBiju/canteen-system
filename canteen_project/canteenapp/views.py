@@ -17,6 +17,8 @@ from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from .models import UserProfile
 from django.db.models import Avg
 from django.core.paginator import Paginator
+from django.db.models.functions import Lower
+
 
 
 # Create your views here.
@@ -221,12 +223,6 @@ def food_list(request):
     sort_by = request.GET.get('sort', '')
     page_number = request.GET.get('page')
 
-    valid_sort_fields = {
-        'price': 'price',
-        'created_at': 'created_at',
-        'f_stock': 'f_stock'
-    }
-
     latest_foods = FoodItems.objects.all()
 
     if category_id:
@@ -235,13 +231,19 @@ def food_list(request):
     if query:
         latest_foods = latest_foods.filter(name__icontains=query)
 
+    # Annotate average rating
     latest_foods = latest_foods.annotate(avg_rating=Avg('feedback__rating'))
 
-    if sort_by in valid_sort_fields:
-        latest_foods = latest_foods.order_by(valid_sort_fields[sort_by])
+    # Sorting logic
+    if sort_by == 'name':
+        latest_foods = latest_foods.order_by(Lower('name'))  # Case-insensitive sort
+    elif sort_by == 'avg_rating':
+        latest_foods = latest_foods.order_by('-avg_rating')
+    elif sort_by in ['price', 'created_at', 'f_stock']:
+        latest_foods = latest_foods.order_by(sort_by)
 
     # Pagination
-    paginator = Paginator(latest_foods, 8)  # Show 8 items per page
+    paginator = Paginator(latest_foods, 8)
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'food_list.html', {
@@ -251,6 +253,8 @@ def food_list(request):
         'category_id': category_id,
         'page_obj': page_obj
     })
+
+
 
 
 
