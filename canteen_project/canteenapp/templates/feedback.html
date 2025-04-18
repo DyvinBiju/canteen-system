@@ -10,6 +10,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
+    body {
+            font-family: Arial, sans-serif;
+        }
+        .feedback-full {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            /* background-color: #f8f8f8; */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        }
     .feedback-container {
       display: flex;
       flex-wrap: wrap;
@@ -48,7 +60,59 @@
     .star-rating i.selected {
       color: #f5b301;
     }
+    .submit-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background-color: #007bff;
+            color: white;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #4BB543;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 15px 25px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 20px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {top: 20px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
   </style>
+  <!-- Toast Message -->
+  <div id="toast" class="toast">Thank you for your valuable feedback</div>
+  <div class="feedback-full">
 
   <h2>Give Feedback</h2>
 
@@ -58,7 +122,7 @@
       {% for entry in items_with_ratings %}
         <div class="feedback-card">
           <img src="{{ entry.item.image.url }}" alt="{{ entry.item.name }}">
-          <h4>{{ entry.item.name }}</h4>
+          <h4>{{ entry.item.name | upper }}</h4>
 
           <div class="star-rating" data-item-id="{{ entry.item.id }}" data-initial-rating="{{ entry.rating }}">
             {% for i in "12345" %}
@@ -70,8 +134,11 @@
       {% endfor %}
     </div>
 
-    <button type="submit">Submit Feedback</button>
+    <div id="buttonContainer">
+      <button class="submit-btn" onclick="handleFeedback()">Submit Feedback</button>
+  </div>
   </form>
+  </div>
 
   <script>
     document.querySelectorAll('.star-rating').forEach(ratingDiv => {
@@ -101,6 +168,18 @@
         });
       });
     });
+
+    function handleFeedback() {
+  
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+
+            // Hide toast after 3s
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+          }
+
   </script>
   </body>
   </html>
