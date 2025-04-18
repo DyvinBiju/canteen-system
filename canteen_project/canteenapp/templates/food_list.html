@@ -204,8 +204,6 @@
             <option disabled selected>Sort Food</option>
             <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>By Date</option>
             <option value="price" {% if sort_by == "price" %}selected{% endif %}>By Price</option>
-            <option value="price" {% if sort_by == "price" %}selected{% endif %}>By Price</option>
-
         </select>
         <form class="form-inline" method="get">
             <input type="hidden" name="category_id" value="{{ category_id }}">
