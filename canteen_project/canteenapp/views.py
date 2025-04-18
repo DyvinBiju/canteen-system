@@ -211,24 +211,6 @@ def view_cart(request):
 
     return render(request, 'view_cart.html', {'cart': updated_cart, 'total_price': total_price})
 
-# @login_required
-# def checkout(request):
-#     cart = request.session.get('cart', {})
-
-#     if cart:
-#         order = orders.objects.create(student=request.user)
-
-#         for food_id, item in cart.items():
-#             food_item = FoodItems.objects.get(id=food_id)
-#             OrderItems.objects.create(
-#                 food=food_item,
-#                 orders=order,
-#                 quantity=item['quantity'],
-#                 price=food_item.price * item['quantity']
-#             )
-#         request.session['cart'] = {}  # Clear the cart
-
-#     return redirect('order_summary', order_id=order.id)
 
 
 def food_list(request):
