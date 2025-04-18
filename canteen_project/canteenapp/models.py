@@ -22,7 +22,7 @@ class FoodItems(TimeStampedModel):
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='canteen_images/',null=True,blank=True)
     description = models.TextField(blank=True)
-    f_stock = models.IntegerField()
+    # f_stock = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2)
     category = models.ForeignKey(Category,on_delete=models.CASCADE, null=True,blank=False)
 

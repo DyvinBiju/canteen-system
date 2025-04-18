@@ -109,7 +109,7 @@
                     <h2 class="total-row">Grand Total: <span class="total-price">₹{{ order.total_price }}</span></h2>
                     
                     <div class="feedback-section">
-                        <a href="{% url 'feedback' %}" class="feedback-btn">Give Feedback</a>
+                        <a href="{% url 'give_feedback' order.order.id %}" class="feedback-btn">Give Feedback</a>
                     </div>
                     <hr>
                 </div>

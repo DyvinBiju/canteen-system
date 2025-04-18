@@ -440,24 +440,15 @@ def decrease_quantity(request, food_id):
 
 
 @login_required
-def give_feedback(request):
+def give_feedback(request, order_id):
     user = request.user
-    current_order_id = request.session.get('current_order_id')
+    order = get_object_or_404(orders, id=order_id, student=user)
 
-    if not current_order_id:
-        messages.error(request, "No recent order found.")
-        return redirect('home')
-
-    # Get the current order and its items
-    current_order = get_object_or_404(orders, id=current_order_id, student=user)
-    ordered_items = OrderItems.objects.filter(orders=current_order)
-
-    # Get the food items from the current order
+    ordered_items = OrderItems.objects.filter(orders=order)
     purchased_items = FoodItems.objects.filter(
         id__in=ordered_items.values_list('food_id', flat=True)
     ).distinct()
 
-    # Get any existing feedback for those items
     feedback_dict = {
         feedback.food_item.id: feedback.rating
         for feedback in Feedback.objects.filter(student=user, food_item__in=purchased_items)
@@ -480,8 +471,9 @@ def give_feedback(request):
                     food_item=item,
                     defaults={'rating': int(rating)}
                 )
-        return redirect('home')
+        return redirect('order_history')  # or your desired success page
 
     return render(request, 'feedback.html', {
         'items_with_ratings': items_with_ratings
     })
+
