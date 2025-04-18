@@ -15,6 +15,8 @@ from reportlab.lib import colors # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
 from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from .models import UserProfile
+from django.db.models import Avg
+
 # Create your views here.
 
 def index(request):
@@ -236,37 +238,37 @@ def food_list(request):
 
     # Define valid sorting fields
     valid_sort_fields = {
-        # 'name':'name',
         'price': 'price',
         'created_at': 'created_at',
         'f_stock': 'f_stock'
-     }
-    
-    # Ensure the selected sort option is valid
-    # sort_field = valid_sort_fields.get(sort_by, 'name')
+    }
 
-    sort_field = valid_sort_fields.get(sort_by, 'f_stock')
-    sort_field = valid_sort_fields.get(sort_by, 'price')
-    sort_field = valid_sort_fields.get(sort_by, 'created_at')
-    
-    latest_foods = FoodItems.objects.all()  # Default: fetch all food items
+    # Base queryset
+    latest_foods = FoodItems.objects.all()
 
-    if category_id:  # Ensure category_id is a valid number
-        # category_id = int(category_id)
-        latest_foods = latest_foods.filter(category_id=category_id)  # Filter by category
-        print(latest_foods)
+    # Filter by category if provided
+    if category_id:
+        latest_foods = latest_foods.filter(category_id=category_id)
+
+    # Filter by search query if provided
     if query:
-        latest_foods = latest_foods.filter(name__icontains=query)  # Apply search filter
+        latest_foods = latest_foods.filter(name__icontains=query)
 
-    if sort_by:
-        latest_foods = latest_foods.order_by(sort_by)  # Apply sorting
+    # Annotate average rating from feedback
+    latest_foods = latest_foods.annotate(avg_rating=Avg('feedback__rating'))
+
+    # Apply sorting if valid sort field is given
+    if sort_by in valid_sort_fields:
+        latest_foods = latest_foods.order_by(valid_sort_fields[sort_by])
 
     return render(request, 'food_list.html', {
         'latest_foods': latest_foods,
         'query': query,
         'sort_by': sort_by,
-        'category_id': category_id #if isinstance(category_id, int) else None  # Pass category_id safely
+        'category_id': category_id
     })
+
+
 
 def add_to_cart(request, food_id):
     cart = request.session.get('cart', {})

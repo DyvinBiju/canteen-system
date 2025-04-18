@@ -377,6 +377,23 @@
                     <input type="hidden" name="category_id" value="{{ request.GET.category_id }}">
                     <img src="{{ food.image.url }}" alt="Food Image" class="food-image">
                     <h3 class="name">{{ food.name | upper}}</h3>
+
+                    <div class="rating">
+                        {% with avg=food.avg_rating|default:0 %}
+                            {% for i in "12345" %}
+                                {% with n=forloop.counter %}
+                                    {% if avg >= n %}
+                                        <i class="fa fa-star" style="color: gold;"></i>
+                                    {% elif avg >= n|add:"-0.5" %}
+                                        <i class="fa fa-star-half-o" style="color: gold;"></i>
+                                    {% else %}
+                                        <i class="fa fa-star-o" style="color: gold;"></i>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+
                     <div class="description-container">
                         <p class="description">{{ food.description }}</p>
                     </div>
