@@ -16,6 +16,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from .models import UserProfile
 from django.db.models import Avg
+from django.core.paginator import Paginator
+
 
 # Create your views here.
 
@@ -214,41 +216,42 @@ def view_cart(request):
 
 
 def food_list(request):
-    category_id = request.GET.get('category_id')  # Get category ID from request
-    query = request.GET.get('q', '')  # Get search query
-    sort_by = request.GET.get('sort', '')  # Get sorting option
+    category_id = request.GET.get('category_id')
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', '')
+    page_number = request.GET.get('page')
 
-    # Define valid sorting fields
     valid_sort_fields = {
         'price': 'price',
         'created_at': 'created_at',
         'f_stock': 'f_stock'
     }
 
-    # Base queryset
     latest_foods = FoodItems.objects.all()
 
-    # Filter by category if provided
     if category_id:
         latest_foods = latest_foods.filter(category_id=category_id)
 
-    # Filter by search query if provided
     if query:
         latest_foods = latest_foods.filter(name__icontains=query)
 
-    # Annotate average rating from feedback
     latest_foods = latest_foods.annotate(avg_rating=Avg('feedback__rating'))
 
-    # Apply sorting if valid sort field is given
     if sort_by in valid_sort_fields:
         latest_foods = latest_foods.order_by(valid_sort_fields[sort_by])
 
+    # Pagination
+    paginator = Paginator(latest_foods, 8)  # Show 8 items per page
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'food_list.html', {
-        'latest_foods': latest_foods,
+        'latest_foods': page_obj,
         'query': query,
         'sort_by': sort_by,
-        'category_id': category_id
+        'category_id': category_id,
+        'page_obj': page_obj
     })
+
 
 
 

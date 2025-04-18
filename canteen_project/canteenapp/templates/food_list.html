@@ -167,6 +167,38 @@
             100% { opacity: 0; }
         }
 
+        .pagination {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            margin: 0 4px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .pagination span {
+            background: #013b74;
+        }
+
+        .pagination a:hover {
+            background: #0056b3;
+        }
+
+        .pagination span:not([style]) {
+            background: transparent;
+            color: #444;
+        }
+
+
+
     </style>
 
 <!-- Sort JavaScript -->
@@ -269,6 +301,37 @@
         <p style="color: #013b74;">No food items available.</p>
         {% endfor %}
     </div>
+    {% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.number > 1 %}
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page=1">&laquo;</a>
+    {% endif %}
+
+    {% if page_obj.number > 3 %}
+        <span>...</span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+            {% if num == page_obj.number %}
+                <span style="background:#013b74;color:white;padding:8px 14px;border-radius:20px;">{{ num }}</span>
+            {% else %}
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+        <span>...</span>
+    {% endif %}
+
+    {% if page_obj.number < page_obj.paginator.num_pages %}
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+    
 </section>
 </body>
 </html>
