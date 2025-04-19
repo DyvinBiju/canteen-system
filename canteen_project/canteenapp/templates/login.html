@@ -46,15 +46,13 @@
     }
 
     h3 {
-        text-align: center;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        font-size: 30px;
-        color: #007bff;
-        font-weight: 600;
-        }
-
-
+      text-align: center;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      font-size: 30px;
+      color: #007bff;
+      font-weight: 600;
+    }
 
     label {
       display: block;
@@ -120,15 +118,6 @@
       text-decoration: underline;
     }
 
-    .alert {
-      background-color: #f8d7da;
-      color: #721c24;
-      padding: 10px 12px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-size: 14px;
-    }
-
     .invalid-feedback {
       color: #dc3545;
       font-size: 13px;
@@ -160,11 +149,29 @@
       <h3>Login</h3>
 
       {% if messages %}
-      <div class="alert">
-        {% for message in messages %}
-        <div>{{ message }}</div>
-        {% endfor %}
-      </div>
+        <div id="toast-container" style="
+          position: fixed;
+          top: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 9999;
+        ">
+          {% for message in messages %}
+            <div style="
+              background-color: {% if 'success' in message.tags %}#d4edda{% else %}#f8d7da{% endif %};
+              color: {% if 'success' in message.tags %}#155724{% else %}#721c24{% endif %};
+              padding: 12px 18px;
+              border-radius: 6px;
+              margin-bottom: 10px;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+              font-size: 15px;
+              text-align: center;
+              min-width: 300px;
+            ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
 
       <form method="post" id="loginForm" novalidate>
@@ -203,7 +210,16 @@
       form.classList.add('was-validated');
     }
   });
+
+  // Wait 2 seconds after showing success toast, then redirect to home
+  const successToast = document.querySelector('#toast-container div');
+  if (successToast && successToast.textContent.toLowerCase().includes("login successful")) {
+    setTimeout(() => {
+      window.location.href = "{% url 'home' %}";
+    }, 1000); // 2 seconds
+  }
 </script>
+
 
 </body>
 </html>

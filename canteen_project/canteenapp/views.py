@@ -21,6 +21,7 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+import re
 
 
 
@@ -34,31 +35,45 @@ def home(request):
     # query category
     categories = Category.objects.all()
     return render(request,'home.html',{'categories':categories})
+    
 
 def about(request):
     return render(request,'about.html',)
 
 def signup_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+
+        if not username or not email or not password or not confirm_password:
+            messages.error(request, "All fields are required.")
+            return render(request, 'signup.html', {'form_data': request.POST})
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            messages.error(request, "Enter a valid email address.")
+            return render(request, 'signup.html', {'form_data': request.POST})
+
+        if len(password) < 8 or len(password) > 12:
+            messages.error(request, "Password must be between 8 and 12 characters.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
         if password != confirm_password:
-            messages.error(request, "Passwords do not match")
-            return redirect('signup')
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return redirect('signup')
+            messages.error(request, "Username already exists.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
+        User.objects.create_user(username=username, email=email, password=password)
         messages.success(request, "Account created successfully! Please log in.")
         return redirect('login')
 
     return render(request, 'signup.html')
+
+
 
 
 def login_view(request):
@@ -69,12 +84,14 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            messages.success(request, "Login successful!")
+            return redirect('login')  # Redirect to login so the message shows briefly
         else:
             messages.error(request, "Invalid username or password")
             return redirect('login')
 
     return render(request, 'login.html')
+
 
 
 def logout_view(request):
