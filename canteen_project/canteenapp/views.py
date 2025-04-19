@@ -18,6 +18,10 @@ from .models import UserProfile
 from django.db.models import Avg
 from django.core.paginator import Paginator
 from django.db.models.functions import Lower
+from django.http import JsonResponse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 
 
 
@@ -106,31 +110,59 @@ def profile_view(request):
 
 @login_required
 def edit_profile(request):
-    """
-    View to handle editing the user's profile.
-    """
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user = request.user
+    user_profile, _ = UserProfile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
-        full_name = request.POST.get('username')
+        username = request.POST.get('username')
         email = request.POST.get('email')
-        profile_picture = request.FILES.get('profile_picture')
 
-        # Update user's email
-        user = request.user
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address.')
+            return redirect('edit_profile')
+
+        user.username = username
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
         user.email = email
+
+        if 'profile_picture' in request.FILES:
+            user_profile.profile_picture = request.FILES['profile_picture']
+
         user.save()
-
-        # Update UserProfile (create if missing)
-        user_profile.full_name = full_name
-        if profile_picture:
-            user_profile.profile_picture = profile_picture
         user_profile.save()
-
-        messages.success(request, "Profile updated successfully!")
-        return redirect('profile')  # Redirect to profile after updating
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('edit_profile')
 
     return render(request, 'edit_profile.html', {'user_profile': user_profile})
+
+
+@login_required
+def delete_profile_picture(request):
+    if request.method == 'POST':
+        profile = request.user.userprofile
+        if profile.profile_picture:
+            profile.profile_picture.delete()
+            profile.save()
+        return JsonResponse({'success': True})
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        return redirect('login')  # Or your homepage
+
+
+
+
+
+
+
+
+
 
 @login_required
 def upload_profile_picture(request):

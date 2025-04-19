@@ -30,6 +30,9 @@ path('order_history/', views.order_history, name='order_history'),
 path('increase-quantity/<str:food_id>/', increase_quantity, name='increase_quantity'),
 path('decrease-quantity/<str:food_id>/', decrease_quantity, name='decrease_quantity'),
 path('feedback/<int:order_id>/', views.give_feedback, name='give_feedback'),
+path('profile/delete-picture/', views.delete_profile_picture, name='delete_profile_picture'),
+path('profile/delete-account/', views.delete_account, name='delete_account'),
+
 
 ]
 
