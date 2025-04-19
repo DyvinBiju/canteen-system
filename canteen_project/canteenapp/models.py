@@ -47,7 +47,7 @@ class Feedback(TimeStampedModel):
     submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.food_item.name
+        return f"{self.student.username}'s rating on {self.food_item.name}"
 
 class OrderItems(TimeStampedModel):
      food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
