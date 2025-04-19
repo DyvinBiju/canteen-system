@@ -67,8 +67,7 @@
               <div class="overlay-content">
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'about' %}">About</a>
-                <a href="blog.html">Blog</a>
-                <a href="testimonial.html">Testimonial</a>
+                <a href="{% url 'testimonial' %}">Testimonial</a>
               </div>
             </div>
           </div>
@@ -101,24 +100,16 @@
          <div class="info_links">
            <ul>
              <li class="active">
-               <a href="home.html">
-                 Home
-               </a>
+              <a href="{% url 'home' %}">Home</a>
+
              </li>
              <li>
-               <a href="about.html">
-                 About
-               </a>
+              <a href="{% url 'about' %}">About</a>
+
              </li>
              <li>
-               <a class="" href="blog.html">
-                 Blog
-               </a>
-             </li>
-             <li>
-               <a class="" href="testimonial.html">
-                 Testimonial
-               </a>
+              <a href="{% url 'testimonial' %}">Testimonial</a>
+
              </li>
            </ul>
          </div>
@@ -143,8 +134,8 @@
        <div class="container">
          <p>
            &copy; <span id="displayYear"></span> All Rights Reserved By
-           <a href="https://html.design/">BVM Canteen System</a><br>
-           Distributed By:</a>BVM College</a>
+           <a href="">Delfood Canteen System</a><br>
+           Distributed By:</a>Delfood</a>
          </p>
        </div>
      </footer>

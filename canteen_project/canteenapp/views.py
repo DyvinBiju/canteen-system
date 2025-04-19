@@ -40,6 +40,9 @@ def home(request):
 def about(request):
     return render(request,'about.html',)
 
+def testimonial(request):
+    return render(request,'testimonial.html',)
+
 def signup_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()

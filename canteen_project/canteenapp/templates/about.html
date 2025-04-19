@@ -46,13 +46,13 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{% url 'home' %}">
             <span>
               Delfood
             </span>
           </a>
           <div class="" id="">
-            <div class="User_option">
+            <!-- <div class="User_option">
               <a href="">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span>Login</span>
@@ -63,18 +63,18 @@
                   <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
               </form>
-            </div>
+            </div> -->
             <div class="custom_menu-btn">
               <button onclick="openNav()">
-                <img src="images/menu.png" alt="">
+                <img src="{% static 'images/menu.png'%}" alt="">
               </button>
             </div>
             <div id="myNav" class="overlay">
               <div class="overlay-content">
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="blog.html">Blog</a>
-                <a href="testimonial.html">Testimonial</a>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'testimonial' %}">Testimonial</a>
+
               </div>
             </div>
           </div>
@@ -103,11 +103,14 @@
           </div>
           <div class="detail-box">
             <p>
-              Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable
-            </p>
-            <a href="">
+              Welcome to Delfood Canteen system, your go-to destination for delicious, hygienic, and affordable meals on campus. We take pride in serving a variety of freshly prepared dishes, catering to different tastes and dietary preferences. Our canteen is designed to provide students and staff with a comfortable and friendly environment where they can enjoy nutritious food and refreshing beverages.
+
+              We prioritize quality ingredients, cleanliness, and prompt service to ensure that you have the best dining experience. Whether you're grabbing a quick snack between classes or enjoying a meal with friends, our canteen is here to keep you energized throughout the day.
+              
+              Join us and savor the flavors that make campus life even better!            </p>
+            <!-- <a href="">
               <i class="fa fa-arrow-right" aria-hidden="true"></i>
-            </a>
+            </a> -->
           </div>
         </div>
       </div>
@@ -134,24 +137,16 @@
         <div class="info_links">
           <ul>
             <li class="active">
-              <a href="index.html">
-                Home
-              </a>
+              <a href="{% url 'home' %}">Home</a>
+
             </li>
             <li>
-              <a href="about.html">
-                About
-              </a>
+              <a href="{% url 'about' %}">About</a>
+
             </li>
             <li>
-              <a class="" href="blog.html">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a class="" href="testimonial.html">
-                Testimonial
-              </a>
+              <a href="{% url 'testimonial' %}">Testimonial</a>
+
             </li>
           </ul>
         </div>
@@ -176,8 +171,8 @@
       <div class="container">
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a><br>
-          Distributed By: <a href="https://themewagon.com/">ThemeWagon</a>
+          <a href="">Delfood Canteen System</a><br>
+          Distributed By:</a>Delfood</a>
         </p>
       </div>
     </footer>

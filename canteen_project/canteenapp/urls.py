@@ -9,7 +9,8 @@ from .views import increase_quantity, decrease_quantity
 urlpatterns = [
 
 path('', home, name='home'),   
-path('about/', views.about, name='about'),        
+path('about/', views.about, name='about'),    
+path('testimonial/', views.testimonial, name='testimonial'),        
 path('signup/', signup_view, name='signup'), 
 path('login/', login_view, name='login'),    
 path('logout/', logout_view, name='logout'), 
