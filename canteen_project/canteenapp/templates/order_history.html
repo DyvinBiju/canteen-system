@@ -41,10 +41,36 @@
         .total-row {
             font-weight: bold;
             text-align: right;
+            margin-bottom: 0;
+            padding-top: 10px;
+
         }
         .total-price {
             color: #000000;
-            font-size: 20px;
+            font-size: 30px;
+        }
+        .feedback-section {
+            text-align: right;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        .feedback-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background-color: #007bff;
+            color: white;
+        }
+        .feedback-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -56,7 +82,7 @@
         {% if order_data %}
             {% for order in order_data %}
                 <div class="order-box">
-                    <h2 style="font-weight: 510;">Order ID: {{ order.order.id }}</h2>
+                    <h2 style="font-weight: 510;">Order: {{ forloop.revcounter }}</h2>
                     <p><strong>Date:</strong> <i style="font-size: 17px;">{{ order.order.created_at }}</i></p>
                     
                     <table>
@@ -81,6 +107,10 @@
                     </table>
                     
                     <h2 class="total-row">Grand Total: <span class="total-price">₹{{ order.total_price }}</span></h2>
+                    
+                    <div class="feedback-section">
+                        <a href="{% url 'give_feedback' order.order.id %}" class="feedback-btn">Give Feedback</a>
+                    </div>
                     <hr>
                 </div>
             {% endfor %}

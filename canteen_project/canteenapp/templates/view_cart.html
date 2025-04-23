@@ -2,230 +2,196 @@
 {% load static %}
 
 {% block contents %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordered Foods List</title>
-    <style>
-        .mycart-container {
-        background: rgba(0, 234, 255, 0.259); /* Semi-transparent blue background */
-        backdrop-filter: blur(10px); /* Adds a frosted glass effect */
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .cart-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px 40px;
+    }
+
+    .cart-title {
+        text-align: center;
+        font-size: 45px;
+        color: #1d3557;
+        margin-bottom: 10px;
+    }
+
+    .cart-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-image {
+        width: 150px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .item-info {
+        color: #666;
+        font-size: 17px;
+    }
+
+    .item-actions {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 30px; /* Add padding back for spacing */
-        border-radius: 15px;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Slight pop-up effect */
-        /* max-width: 700px; */
-        width: 90%;
-        position: relative; /* Prevent overlapping */
-        z-index: 10;
-        } 
+        gap: 8px;
+    }
 
-        
-        .cart_body {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 30px;
-        min-height: 100vh; /* Ensures it covers the whole screen */
-        }
-
-        /* Blurred background */
-        .cart_body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("https://t3.ftcdn.net/jpg/02/52/38/80/360_F_252388016_KjPnB9vglSCuUJAumCDNbmMzGdzPAucK.jpg") no-repeat center center;
-        background-size: cover;
-        filter: blur(10px); /* Apply blur effect */
-        z-index: -1; /* Keeps the blur behind the content */
-        }
-
-
-        .cart-item {
+    .qty-controls {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        background-color: rgba(157, 255, 0, 0.427);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        width: 90%;
-        max-width: 600px;
-        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
-        }
+        gap: 6px;
+    }
 
-        .food-image {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-right: 15px;
-        }
-
-        .item-details {
-            flex-grow: 1;
-            text-align: left;
-        }
-
-        .item-details h3 {
-            margin: 0;
-            color: #000000;
-        }
-
-        .item-details p {
-            margin: 5px 0;
-            color: #000000;
-        }
-
-        .btn-danger, .btn-success {
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-danger {
-            background-color: red;
-        }
-
-        .btn-success {
-        background-color: rgba(62, 237, 9, 0.836);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
+    .qty-controls a {
+        padding: 4px 10px;
+        border: 1px solid #ccc;
+        background: #e8f0fe;
+        color: #333;
         text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .qty-controls span {
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .remove-btn {
+        background: #dc3545;
+        border: 1px solid #f5c2c7;
+        color: white;
+        padding: 5px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .cart-summary {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .total-price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1d3557;
+        margin-bottom: 20px;
+    }
+
+    .action-buttons a {
         display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+    .shop{
+        background-color: #007bff;
+        color: white;
+
+    }
+    .shop:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    .proceed{
+        background-color: #42d032;
+        color: white;
+    }
+    .proceed:hover {
+            background-color: #218838;
+            color: white;
         }
 
-        .btn-success:hover {
-            background-color: #d4ff00;
-            transform: scale(1.02);
-            transition: 0.3s;
-            color: black;
-        }
+    
 
-        .cart-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .empty-cart {
+        text-align: center;
+        color: #666;
+        font-size: 18px;
+        margin-top: 60px;
+    }
 
-        .cart-summary {
-            margin-top: 20px;
-            text-align: center;
-        }
+</style>
 
-        .checkout {
-            margin-bottom: 10px;
-        }
+<div class="cart-wrapper">
+    <h1 class="cart-title">Your Cart</h1>
+    <p class="cart-subtitle">Review and manage your selected items</p>
 
-        .alert-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50%;
-            z-index: 1000;
-        }
-
-        .alert {
-            animation: fadeOut 4s forwards;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        .home-button {
-            background: linear-gradient(45deg, #00000098, #05f811);
-            padding: 8px 14px;
-            font-size: 14px;
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: #ffffff;
-        }
-
-        .home-button:hover {
-            background: linear-gradient(45deg, #ff9b7a, #26ff04);
-            transform: scale(1.05);
-            color: #000000;
-        }
-        .your_cart{
-            font-weight: 20px;
-            font-size: 70px;
-            color: #ffffff;
-        }
-        
-
-    </style>
-</head>
-<body>
-    <!-- Message -->
-    {% if messages %}
-<div class="alert-container">
-    {% for message in messages %}
-    <div class="alert alert-success">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-<!-- end-message -->
-    <div class="cart_body" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-        <h1 class="your_cart">Your Cart</h1>
-        <div class="mycart-container">
-            {% if cart %}
-                {% for food_id, item in cart.items %}
-                    <div class="cart-item">
-                        {% if item.image %}
-                            <img src="{{ item.image }}" alt="{{ item.name }}" class="food-image">
-                        {% else %}
-                            <p>No Image Available</p>
-                        {% endif %}
-                        <div class="item-details">
-                            <h3>{{ item.name }}</h3>
-                            <p>Quantity: {{ item.quantity }}</p>
-                            <p>Price: ₹{{ item.price }}</p>
-                            <p>Total: ₹{{ item.total }}</p>
-                        </div>
-                        <div class="cart-actions">
-                            <a href="{% url 'decrease_quantity' food_id %}" class="btn btn-danger">-</a>
-                            <span>{{ item.quantity }}</span>
-                            <a href="{% url 'increase_quantity' food_id %}" class="btn btn-success">+</a>
-                            <a href="{% url 'remove_from_cart' food_id %}" class="btn btn-danger">Remove</a>
-                        </div>
-                    </div>
-                {% endfor %}
-
-                <div class="cart-summary">
-                    <a href="{% url 'food_list' %}" class="home-button"> food list </a>  
-                    <div class="checkout">
-                        <a href="{% url 'bill' %}" class="btn btn-success">Proceed to Checkout</a>
-                    </div>
-                    <div class="total-price">
-                        <h2>Total Price: ₹{{ total_price }}</h2>
-                    </div>
+    {% if cart %}
+        {% for food_id, item in cart.items %}
+            <div class="cart-item">
+                {% if item.image %}
+                    <img src="{{ item.image }}" alt="{{ item.name }}" class="item-image">
+                {% endif %}
+                <div class="item-details">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-info">Price: ₹{{ item.price }}</div>
+                    <div class="item-info">Quantity: {{ item.quantity }}</div>
+                    <div class="item-info">Total: ₹{{ item.total }}</div>
                 </div>
-            {% else %}
-                <p style="color: beige;">Your cart is empty. <a href="{% url 'food_list' %}" style="color: rgb(98, 238, 33);">Browse food items</a></p>
-            {% endif %}
+                <div class="item-actions">
+                    <div class="qty-controls">
+                        <a href="{% url 'decrease_quantity' food_id %}">-</a>
+                        <span>{{ item.quantity }}</span>
+                        <a href="{% url 'increase_quantity' food_id %}">+</a>
+                    </div>
+                    <a href="{% url 'remove_from_cart' food_id %}" class="remove-btn">Remove</a>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="cart-summary">
+            <div class="total-price">Total Price: ₹{{ total_price }}</div>
+            <div class="action-buttons">
+                <a href="{% url 'food_list' %}" class="shop">Continue Shopping</a>
+                <a href="{% url 'bill' %}" class="proceed">Proceed to Checkout</a>
+            </div>
         </div>
-        
-    </div>
-</body> 
+    {% else %}
+        <div class="empty-cart">
+            Your cart is empty. <a href="{% url 'food_list' %}">Browse food items</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
+

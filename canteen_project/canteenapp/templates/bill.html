@@ -50,8 +50,6 @@
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #42d032;
-            color: white;
             font-size: 16px;
             font-weight: bold;
             border: none;
@@ -59,17 +57,77 @@
             text-align: center;
             cursor: pointer;
             text-decoration: none;
+            transition: all 0.3s ease;
         }
-        .checkout-btn:hover {
+        .confirm-btn {
+            background-color: #42d032;
+            color: white;
+        }
+        .confirm-btn:hover {
             background-color: #36b027;
+        }
+        .home-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+        .shop-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .shop-btn:hover {
+            background-color: #218838;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #4BB543;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 15px 25px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 20px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {top: 20px; opacity: 1;}
+            to {top: 0; opacity: 0;}
         }
     </style>
 </head>
 <body>
+    <!-- Toast Message -->
+    <div id="toast" class="toast">Your order has been placed successfully!</div>
+
     <div class="bill-container">
         <div class="header">
             <h1 style="font-weight: 600;">Bill Summary</h1>
-            <p><strong>Customer Name:</strong> <a style="font-size: 17px;">{{ user.username | upper}}</strong></a>
+            <p><strong>Customer Name:</strong> <a style="font-size: 17px;">{{ user.username | upper }}</a></p>
             <p><strong>Date:</strong> {{ current_date }}</p>
         </div>
 
@@ -89,18 +147,51 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.quantity }}</td>
                     <td>{{ item.price }}</td>
-                    <td>₹{{ item.total }}</td>  <!-- Correct total calculation -->
+                    <td>₹{{ item.total }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <h2 class="total-row">Grand Total: <span class="total-price">₹{{ total_price }}</span></h2>
 
-        <a href="{% url 'checkout' %}" class="checkout-btn">Confirm Payment</a>
+        <iframe id="pdfFrame" style="display:none;"></iframe>
+
+        <div id="buttonContainer">
+            <button class="checkout-btn confirm-btn" onclick="handlePayment()">Confirm Payment</button>
+        </div>
+
         {% else %}
         <p>Your cart is empty. <a href="{% url 'food_list' %}">Browse items</a> to add more!</p>
         {% endif %}
     </div>
+
+    <script>
+        function handlePayment() {
+            // Trigger PDF download
+            document.getElementById("pdfFrame").src = "{% url 'checkout' %}";
+
+            // Show toast
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+
+            // Hide toast after 3s
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+
+            // Replace button after 2s
+            setTimeout(() => {
+                const container = document.getElementById("buttonContainer");
+                container.innerHTML = `
+                    <div class="button-group">
+                        <a href="{% url 'home' %}" class="checkout-btn home-btn">Home</a>
+                        <a href="{% url 'food_list' %}" class="checkout-btn shop-btn">Continue Shopping</a>
+                    </div>
+                `;
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
 {% endblock %}
+

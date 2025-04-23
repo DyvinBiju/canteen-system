@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import FoodItems,orders,OrderItems
+from .models import Feedback, FoodItems,orders,OrderItems
 from .models import Category
 from datetime import datetime
 from django.urls import reverse
@@ -15,6 +15,17 @@ from reportlab.lib import colors # type: ignore
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer # type: ignore
 from reportlab.lib.styles import getSampleStyleSheet # type: ignore
 from .models import UserProfile
+from django.db.models import Avg
+from django.core.paginator import Paginator
+from django.db.models.functions import Lower
+from django.http import JsonResponse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+import re
+
+
+
+
 # Create your views here.
 
 def index(request):
@@ -24,31 +35,48 @@ def home(request):
     # query category
     categories = Category.objects.all()
     return render(request,'home.html',{'categories':categories})
+    
 
 def about(request):
     return render(request,'about.html',)
 
+def testimonial(request):
+    return render(request,'testimonial.html',)
+
 def signup_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+
+        if not username or not email or not password or not confirm_password:
+            messages.error(request, "All fields are required.")
+            return render(request, 'signup.html', {'form_data': request.POST})
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            messages.error(request, "Enter a valid email address.")
+            return render(request, 'signup.html', {'form_data': request.POST})
+
+        if len(password) < 8 or len(password) > 12:
+            messages.error(request, "Password must be between 8 and 12 characters.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
         if password != confirm_password:
-            messages.error(request, "Passwords do not match")
-            return redirect('signup')
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return redirect('signup')
+            messages.error(request, "Username already exists.")
+            return render(request, 'signup.html', {'form_data': request.POST})
 
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
+        User.objects.create_user(username=username, email=email, password=password)
         messages.success(request, "Account created successfully! Please log in.")
         return redirect('login')
 
     return render(request, 'signup.html')
+
+
 
 
 def login_view(request):
@@ -59,12 +87,14 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            messages.success(request, "Login successful!")
+            return redirect('login')  # Redirect to login so the message shows briefly
         else:
             messages.error(request, "Invalid username or password")
             return redirect('login')
 
     return render(request, 'login.html')
+
 
 
 def logout_view(request):
@@ -100,31 +130,59 @@ def profile_view(request):
 
 @login_required
 def edit_profile(request):
-    """
-    View to handle editing the user's profile.
-    """
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user = request.user
+    user_profile, _ = UserProfile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
-        full_name = request.POST.get('username')
+        username = request.POST.get('username')
         email = request.POST.get('email')
-        profile_picture = request.FILES.get('profile_picture')
 
-        # Update user's email
-        user = request.user
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address.')
+            return redirect('edit_profile')
+
+        user.username = username
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
         user.email = email
+
+        if 'profile_picture' in request.FILES:
+            user_profile.profile_picture = request.FILES['profile_picture']
+
         user.save()
-
-        # Update UserProfile (create if missing)
-        user_profile.full_name = full_name
-        if profile_picture:
-            user_profile.profile_picture = profile_picture
         user_profile.save()
-
-        messages.success(request, "Profile updated successfully!")
-        return redirect('profile')  # Redirect to profile after updating
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('edit_profile')
 
     return render(request, 'edit_profile.html', {'user_profile': user_profile})
+
+
+@login_required
+def delete_profile_picture(request):
+    if request.method == 'POST':
+        profile = request.user.userprofile
+        if profile.profile_picture:
+            profile.profile_picture.delete()
+            profile.save()
+        return JsonResponse({'success': True})
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        return redirect('login')  # Or your homepage
+
+
+
+
+
+
+
+
+
 
 @login_required
 def upload_profile_picture(request):
@@ -209,64 +267,49 @@ def view_cart(request):
 
     return render(request, 'view_cart.html', {'cart': updated_cart, 'total_price': total_price})
 
-# @login_required
-# def checkout(request):
-#     cart = request.session.get('cart', {})
-
-#     if cart:
-#         order = orders.objects.create(student=request.user)
-
-#         for food_id, item in cart.items():
-#             food_item = FoodItems.objects.get(id=food_id)
-#             OrderItems.objects.create(
-#                 food=food_item,
-#                 orders=order,
-#                 quantity=item['quantity'],
-#                 price=food_item.price * item['quantity']
-#             )
-#         request.session['cart'] = {}  # Clear the cart
-
-#     return redirect('order_summary', order_id=order.id)
 
 
 def food_list(request):
-    category_id = request.GET.get('category_id')  # Get category ID from request
-    query = request.GET.get('q', '')  # Get search query
-    sort_by = request.GET.get('sort', '')  # Get sorting option
+    category_id = request.GET.get('category_id')
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', '')
+    page_number = request.GET.get('page')
 
-    # Define valid sorting fields
-    valid_sort_fields = {
-        # 'name':'name',
-        'price': 'price',
-        'created_at': 'created_at',
-        'f_stock': 'f_stock'
-     }
-    
-    # Ensure the selected sort option is valid
-    # sort_field = valid_sort_fields.get(sort_by, 'name')
+    latest_foods = FoodItems.objects.all()
 
-    sort_field = valid_sort_fields.get(sort_by, 'f_stock')
-    sort_field = valid_sort_fields.get(sort_by, 'price')
-    sort_field = valid_sort_fields.get(sort_by, 'created_at')
-    
-    latest_foods = FoodItems.objects.all()  # Default: fetch all food items
+    if category_id:
+        latest_foods = latest_foods.filter(category_id=category_id)
 
-    if category_id:  # Ensure category_id is a valid number
-        # category_id = int(category_id)
-        latest_foods = latest_foods.filter(category_id=category_id)  # Filter by category
-        print(latest_foods)
     if query:
-        latest_foods = latest_foods.filter(name__icontains=query)  # Apply search filter
+        latest_foods = latest_foods.filter(name__icontains=query)
 
-    if sort_by:
-        latest_foods = latest_foods.order_by(sort_by)  # Apply sorting
+    # Annotate average rating
+    latest_foods = latest_foods.annotate(avg_rating=Avg('feedback__rating'))
+
+    # Sorting logic
+    if sort_by == 'name':
+        latest_foods = latest_foods.order_by(Lower('name'))  # Case-insensitive sort
+    elif sort_by == 'avg_rating':
+        latest_foods = latest_foods.order_by('-avg_rating')
+    elif sort_by in ['price', 'created_at', 'f_stock']:
+        latest_foods = latest_foods.order_by(sort_by)
+
+    # Pagination
+    paginator = Paginator(latest_foods, 8)
+    page_obj = paginator.get_page(page_number)
 
     return render(request, 'food_list.html', {
-        'latest_foods': latest_foods,
+        'latest_foods': page_obj,
         'query': query,
         'sort_by': sort_by,
-        'category_id': category_id #if isinstance(category_id, int) else None  # Pass category_id safely
+        'category_id': category_id,
+        'page_obj': page_obj
     })
+
+
+
+
+
 
 def add_to_cart(request, food_id):
     cart = request.session.get('cart', {})
@@ -392,6 +435,8 @@ def checkout(request):
 
     # Clear the cart after order completion
     request.session['cart'] = {}
+    request.session['cart_count'] = 0
+    request.session.modified = True
 
     # Return PDF as response
     response = FileResponse(buffer, as_attachment=True, filename=f"Bill_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
@@ -435,3 +480,43 @@ def decrease_quantity(request, food_id):
 
     request.session['cart'] = cart  # Save updated cart in session
     return redirect('view_cart')
+
+
+@login_required
+def give_feedback(request, order_id):
+    user = request.user
+    order = get_object_or_404(orders, id=order_id, student=user)
+
+    ordered_items = OrderItems.objects.filter(orders=order)
+    purchased_items = FoodItems.objects.filter(
+        id__in=ordered_items.values_list('food_id', flat=True)
+    ).distinct()
+
+    feedback_dict = {
+        feedback.food_item.id: feedback.rating
+        for feedback in Feedback.objects.filter(student=user, food_item__in=purchased_items)
+    }
+
+    items_with_ratings = []
+    for item in purchased_items:
+        items_with_ratings.append({
+            'item': item,
+            'rating': feedback_dict.get(item.id, 0)
+        })
+
+    if request.method == 'POST':
+        for entry in items_with_ratings:
+            item = entry['item']
+            rating = request.POST.get(f'rating_{item.id}')
+            if rating:
+                Feedback.objects.update_or_create(
+                    student=user,
+                    food_item=item,
+                    defaults={'rating': int(rating)}
+                )
+        return redirect('order_history')  # or your desired success page
+
+    return render(request, 'feedback.html', {
+        'items_with_ratings': items_with_ratings
+    })
+

@@ -7,254 +7,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Menu</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        .menu {
-        position: relative; /* Ensures it acts as the reference for ::before */
-        padding: 50px 0;
-        overflow: hidden;
-        background: url("https://t3.ftcdn.net/jpg/02/52/38/80/360_F_252388016_KjPnB9vglSCuUJAumCDNbmMzGdzPAucK.jpg") no-repeat center center;
-        background-size: cover;
-        background-attachment: fixed; /* Keeps the background fixed while scrolling */
-        padding-bottom: 100px; 
-        min-height: 500px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f4f9;
         }
 
-        .menu::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: inherit; /* Inherits the same background as .menu */
-        filter: blur(8px); /* Blur effect */
-        z-index: 0; /* Ensures it's behind the content */
-        filter: blur(10px);
-        }
-        .footer {
-        position: relative;
-        z-index: 2; /* Ensures footer stays above everything */
-        background: #001f5f; /* Adjust as needed */
-        padding: 20px;
-        margin-bottom: -245px;
+        .menu {
+            padding: 40px 20px;
         }
 
         .food-grid {
-            padding: 30px;
-            padding-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: -245px;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 0; 
-        }
-
-        .food-image {
-            width: 100%;
-            height: 700px;
-            border-radius: 10px;
-            object-fit: cover;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
         }
 
         .food-card {
-        padding: 10px;
-        border-radius: 10px;
-        width: 300px;
-        height: auto;
-        text-align: center;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.26);
-        background: rgba(255, 255, 255, 0.15); /* Transparent background */
-        backdrop-filter: blur(10px); /* Blurred effect */
-        -webkit-backdrop-filter: blur(10px); /* For Safari support */
-        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
-        transition: 0.3s;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .food-card:hover {
-            background-color: #f3f3fa00;
-            transform: scale(1.02);
-            transition: 0.3s;
+            transform: translateY(-5px);
         }
 
         .food-card img {
             width: 100%;
-            border-radius: 5px;
             height: 200px;
             object-fit: cover;
         }
 
-        .food-card img:hover {
-            background-color: #000000;
-            transform: scale(1.05);
-            transition: 0.3s;
-        }
-
-        .price {
+        .food-card .name {
+            font-size: 20px;
             font-weight: bold;
-            color: #ff0000;
+            margin: 10px;
+            color: #013b74;
         }
 
-        .menu {
-            background-color: rgb(255, 255, 255);
+        .rating {
+            margin: 0 10px;
         }
 
-        .order-btn {
-            background-color: #ff6600;
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: inline-block;
-            transition: all 0.3s ease-in-out;
-            transform: scale(0.8);
+        .rating i {
+            color: gold;
+            font-size: 16px;
         }
-
-        .cart-btn {
-            background-color: #188d0c;
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            display: inline-block;
-            transition: all 0.3s ease-in-out;
-            transform: scale(0.8);
-        }
-
-        .cart-btn:hover {
-            background-color: #b5ee0c;
-            transform: scale(.86);
-            color: #000000;
-        }
-
-        /* .order-btn:hover {
-            background-color: #e65c00;
-            transform: scale(1.05);
-        } */
 
         .description-container {
-            width: 100%;
+            margin: 10px;
             height: 50px;
             overflow: hidden;
             position: relative;
         }
 
         .description {
-            display: block;
-            max-height: 100px;
-            line-height: 1.5;
             transition: transform 1s ease-in-out;
-            color: #060606;
-            text-align: justify;
+            color: #333;
+            line-height: 1.4;
         }
 
         .description-container:hover .description {
-            transform: translateY(-70%);
+            transform: translateY(-60%);
         }
 
-        .name {
-            color: black;
-            padding-top: 8px;
-            font-family: Georgia, 'Times New Roman', Times, serif;
+        .price {
+            font-weight: bold;
+            color: #e53935;
+            margin: 10px;
         }
 
-        /* .stock {
-            color: #42d032;
-            padding-top: 8px;
-            font-size: 17px;
-        } */
-
-        .frm {
-            position: relative;
-            border-radius: 10px;
-            margin-left: 25px;
-        }
-
-        .search_n_sort_container {
-            background-color: #ffffff00;
-            padding-top: 5px;
-            display: flex;
-            justify-content: end;
-            padding-right: 30px;
-            padding-bottom: 5px;
-            margin-top: -50px;
-        }
-
-        .sort-name {
-            padding-left: 20px;
-            padding-top: 10px;
-            color: #000000;
-        }
-
-        /* Combined Quantity and Add to Cart buttons next to each other */
         .quantity-container {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-top: 10px;
+            align-items: center;
+            margin: 10px;
             gap: 10px;
         }
 
         .quantity-box {
             display: flex;
             align-items: center;
-            background-color: #2ba01e; /* Green background */
-            border-radius: 10px;
-            padding: 8px;
-            gap: 10px;
-            margin-left: 30px;
-            /* transform: scale(0.8); */
+            gap: 6px;
+            background: #e0f7e9;
+            border-radius: 8px;
+            padding: 5px 10px;
         }
 
         .quantity-input {
             width: 50px;
-            padding: 5px;
+            padding: 4px;
             font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        /* .quantity-box:hover {
-            background-color: #188d0c;
-            transform: scale(1.1);
-        } */
-        .qty-label {
-            font-size: 14px;
-            font-weight: bold;
-            color: white; /* White text for contrast */
         }
 
         .cart-btn {
-            margin-left: 10px;  
-            font-size: 17px;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
-        .fa-shopping-cart{
+
+        .cart-btn:hover {
+            background: #0056b3;
+        }
+
+        .search_n_sort_container {
+            display: flex;
+            justify-content: end;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .frm {
+            border-radius: 6px;
+            padding: 6px 12px;
+        }
+
+        .fa-shopping-cart {
+            font-size: 24px;
             position: relative;
-            display: inline-block;
-            text-decoration: none;
-            color: black;
-            font-size: 30px;
+            color: #013b74;
         }
+
         .cart-count {
             position: absolute;
-            top: -5px;
+            top: -6px;
             right: -10px;
             background: red;
             color: white;
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 13px;
+            padding: 2px 6px;
             border-radius: 50%;
-            padding: 3px 6px;
         }
 
         .alert-container {
@@ -262,150 +155,187 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50%;
             z-index: 1000;
         }
 
         .alert {
-            /* padding: 15px;
-            border-radius: 5px;
-            color: white; */
-            /* background-color: green;  */
-            /* text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
             animation: fadeOut 4s forwards;
         }
 
         @keyframes fadeOut {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
+            0%, 80% { opacity: 1; }
             100% { opacity: 0; }
         }
-        .home-button {
-            background: linear-gradient(45deg, #000000, #f80505);
-            padding: 8px 14px;
-            font-size: 14px;
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: #ffffff;
+
+        .pagination {
+            margin-top: 30px;
+            text-align: center;
         }
 
-        .home-button:hover {
-            background: linear-gradient(45deg, #ebe8e7, #04ffea);
-            transform: scale(1.05);
-            color: #000000;
+        .pagination a, .pagination span {
+            display: inline-block;
+            margin: 0 4px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-weight: 500;
         }
+
+        .pagination span {
+            background: #013b74;
+        }
+
+        .pagination a:hover {
+            background: #0056b3;
+        }
+
+        .pagination span:not([style]) {
+            background: transparent;
+            color: #444;
+        }
+
+
 
     </style>
 
-    <!-- Sort JavaScript -->
-    <script>
-        function sortFoodItems() {
-            var selectedOption = document.getElementById("sort-options").value;
-            var searchQuery = "{{ query }}"; // Preserve search query if present
-            var categoryId = "{{ category_id }}"; // Preserve category ID
-            
-            var url = "?category_id=" + categoryId + "&sort=" + selectedOption;
-            
-            if (searchQuery) {
-                url += "&q=" + searchQuery;
-            }
-
-            window.location.href = url;
+<!-- Sort JavaScript -->
+<script>
+    function sortFoodItems() {
+        var selectedOption = document.getElementById("sort-options").value;
+        var searchQuery = "{{ query }}"; // Preserve search query if present
+        var categoryId = "{{ category_id }}"; // Preserve category ID
+        
+        var url = "?category_id=" + categoryId + "&sort=" + selectedOption;
+        
+        if (searchQuery) {
+            url += "&q=" + searchQuery;
         }
-    </script>
-    <!-- End Sort JavaScript -->
+
+        window.location.href = url;
+    }
+</script>
+<!-- End Sort JavaScript -->
+
 
 </head>
-
 <body>
-
-    <!-- message -->
-    {% if messages %}
+{% if messages %}
 <div class="alert-container">
     {% for message in messages %}
-    <div class="alert alert-success">
-        {{ message }}
-    </div>
+    <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
 </div>
 {% endif %}
-<!-- end-message -->
 
-    <!-- Food Listing Section -->
-    <section class="menu">
-        <div class="search_n_sort_container">
-            <!-- Sorting Dropdown -->
-            <label class="sort-name" for="sort-options">:</label>
-            <select id="sort-options" onchange="sortFoodItems()" class="sort-select">
-                <option>sort food</option>
-                <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>by date</option>
-                <option value="price" {% if sort_by == "price" %}selected{% endif %}>by price</option>
-            </select>
-            
-            <!-- Food Search Form -->
-            <form class="form-inline" method="get">
-                <input type="hidden" name="category_id" value="{{ category_id }}">
-                <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}"/>
-                <button class="btn nav_search-btn" type="submit">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-            </form>
-            <a href="{% url 'view_cart' %}">
-                <i class="fa fa-shopping-cart">
-                    <span class="cart-count">
-                        {% if request.session.cart_count %}
-                        {{ request.session.cart_count }}
-                        {% else %}
-                        0
-                        {% endif %}
-                    </span>
-                </i>
-            </a>
-
-        </div>
+<section class="menu">
+    <div class="search_n_sort_container">
+        <select id="sort-options" onchange="sortFoodItems()">
+            <option disabled {% if not sort_by %}selected{% endif %}>Sort Food</option>
+            <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>By Date</option>
+            <option value="price" {% if sort_by == "price" %}selected{% endif %}>By Price</option>
+            <option value="name" {% if sort_by == "name" %}selected{% endif %}>By Name</option>
+            <option value="avg_rating" {% if sort_by == "avg_rating" %}selected{% endif %}>By Rating</option>
+        </select>
         
-        <!-- Display Grid for Food Items -->
-        <div class="food-grid">
-            {% for food in latest_foods %}
-            <div class="food-card">
-                <form action="{% url 'add_to_cart' food.id %}?category_id={{ request.GET.category_id }}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="category_id" value="{{ request.GET.category_id }}">
-                    <img src="{{ food.image.url }}" alt="Food Image" class="food-image">
-                    <h3 class="name">{{ food.name | upper}}</h3>
-                    <div class="description-container">
-                        <p class="description">{{ food.description }}</p>
+        <form class="form-inline" method="get">
+            <input type="hidden" name="category_id" value="{{ category_id }}">
+            <input type="search" name="q" class="frm" placeholder="Search Food..." value="{{ query }}">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <a href="{% url 'view_cart' %}">
+            <i class="fa fa-shopping-cart">
+                <span class="cart-count">
+                    {% if request.session.cart_count %}
+                        {{ request.session.cart_count }}
+                    {% else %}0{% endif %}
+                </span>
+            </i>
+        </a>
+    </div>
+
+    <div class="food-grid">
+        {% for food in latest_foods %}
+        <div class="food-card">
+            <form action="{% url 'add_to_cart' food.id %}?category_id={{ request.GET.category_id }}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="category_id" value="{{ request.GET.category_id }}">
+                <img src="{{ food.image.url }}" alt="Food Image">
+                <h3 class="name">{{ food.name|upper }}</h3>
+
+                <div class="rating">
+                    {% with avg=food.avg_rating|default:0 %}
+                        {% for i in "12345" %}
+                            {% with n=forloop.counter %}
+                                {% if avg >= n %}
+                                    <i class="fa fa-star"></i>
+                                {% elif avg >= n|add:"-0.5" %}
+                                    <i class="fa fa-star-half-o"></i>
+                                {% else %}
+                                    <i class="fa fa-star-o"></i>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+
+                <div class="description-container">
+                    <p class="description">{{ food.description }}</p>
+                </div>
+
+                <span class="price">Price: ₹{{ food.price }}</span>
+
+                <div class="quantity-container">
+                    <div class="quantity-box">
+                        <span>Qty:</span>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ food.f_stock }}" class="quantity-input">
                     </div>
-                    <span class="price">Price: ₹{{ food.price }}</span>
-                    
-                    <div class="quantity-container">
-                        <!-- Combined 'Qty' label and input field in the same box -->
-                        <div class="quantity-box">
-                            <span class="qty-label">Qty:</span>
-                            <input type="number" name="quantity" value="1" min="1" max="{{ food.f_stock }}" class="quantity-input" />
-                        </div>
-                        {% if user.is_authenticated %}
+                    {% if user.is_authenticated %}
                         <button type="submit" class="cart-btn">Add to Cart</button>
-                        {% else %}
-                        <a href="{% url 'login' %}" class="cart-btn">Add to cart</a>
-
-                        {% endif %}
-
-                    </div>
-                    
-                </form>
-            </div>
-            {% empty %}
-                <p style="color: aqua;">No food items available.</p>
-            {% endfor %}
-             <!-- <a href="{% url 'home' %}" class="home-button"> << Home </a>-->
+                    {% else %}
+                        <a href="{% url 'login' %}" class="cart-btn">Add to Cart</a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
-    </section>
-    <!-- End Food Listing -->
+        {% empty %}
+        <p style="color: #013b74;">No food items available.</p>
+        {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.number > 1 %}
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page=1">&laquo;</a>
+    {% endif %}
+
+    {% if page_obj.number > 3 %}
+        <span>...</span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+            {% if num == page_obj.number %}
+                <span style="background:#013b74;color:white;padding:8px 14px;border-radius:20px;">{{ num }}</span>
+            {% else %}
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+        <span>...</span>
+    {% endif %}
+
+    {% if page_obj.number < page_obj.paginator.num_pages %}
+        <a href="?{% if query %}q={{ query }}&{% endif %}{% if category_id %}category_id={{ category_id }}&{% endif %}{% if sort_by %}sort={{ sort_by }}&{% endif %}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+    
+</section>
 </body>
 </html>
 {% endblock %}

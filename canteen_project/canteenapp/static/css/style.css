@@ -154,8 +154,8 @@ a:focus {
 }
 
 .User_option a {
-  color: black !important;
-  margin-left: 25px;
+  color: black ;
+  /* margin-left: 15px; */
 }
 
 .User_option .form-inline {
@@ -798,7 +798,3 @@ a:focus {
   color: inherit;
 }
 /*# sourceMappingURL=style.css.map */
-.dropdown-item:hover {
-  text-align: center;
-  margin-left: 0px;
-}
