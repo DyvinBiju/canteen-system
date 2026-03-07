@@ -1,56 +1,197 @@
-{%extends 'layout.html'%}
-{%load static%}
+{% extends 'layout.html' %}
+
+{% block contents %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>customer bill</title>
-     
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .bill-container {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #e7e8afc0;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .total-row {
+            font-weight: bold;
+            text-align: right;
+        }
+        .total-price {
+            color: #000000;
+            font-size: 33px;
+        }
+        .checkout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .confirm-btn {
+            background-color: #42d032;
+            color: white;
+        }
+        .confirm-btn:hover {
+            background-color: #36b027;
+        }
+        .home-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+        .shop-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .shop-btn:hover {
+            background-color: #218838;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #4BB543;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 15px 25px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {top: 0; opacity: 0;}
+            to {top: 20px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {top: 20px; opacity: 1;}
+            to {top: 0; opacity: 0;}
+        }
+    </style>
 </head>
-
 <body>
-     
-{%block contents%}
+    <!-- Toast Message -->
+    <div id="toast" class="toast">Your order has been placed successfully!</div>
 
-<link href="{% static 'css/bill.css' %}" rel="stylesheet" />
-<div class="wrapper">
-<div class="bill-container">
-     <h1>Canteen Bill</h1>
-     <p>Date: <span id="bill-date"></span></p>
-     <p>Customer Name:{{bill_data.User}}</p>
-     <table>
-         <thead>
-             <tr>
-                 <th>Item</th>
-                 <th>Quantity</th>
-                 <th>Price</th>
-             </tr>
-         </thead>
-         <tbody>
-            {% for bill_set in bill_data %}
-             <tr>
-                 <td>{{bill_set.food}}</td>
-                 
-                 <td>{{bill_set.quantity}}</td>
-                 <td>{{bill_set.price}}</td>
-             </tr>
-             
-             {% endfor %}
-         </tbody>
-     </table>
-     <p>Total: {{total}}</p>
-     <p>Thank you for dining with us!</p>
- </div>
-</div>
- <script>
-     // Set the current date
-     document.getElementById('bill-date').textContent = new Date().toLocaleDateString();
- </script>
+    <div class="bill-container">
+        <div class="header">
+            <h1 style="font-weight: 600;">Bill Summary</h1>
+            <p><strong>Customer Name:</strong> <a style="font-size: 17px;">{{ user.username | upper }}</a></p>
+            <p><strong>Date:</strong> {{ current_date }}</p>
+        </div>
 
+        {% if cart %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for food_id, item in cart.items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>₹{{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2 class="total-row">Grand Total: <span class="total-price">₹{{ total_price }}</span></h2>
 
+        <iframe id="pdfFrame" style="display:none;"></iframe>
 
-{%endblock%}
+        <div id="buttonContainer">
+            <button class="checkout-btn confirm-btn" onclick="handlePayment()">Confirm Payment</button>
+        </div>
+
+        {% else %}
+        <p>Your cart is empty. <a href="{% url 'food_list' %}">Browse items</a> to add more!</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function handlePayment() {
+            // Trigger PDF download
+            document.getElementById("pdfFrame").src = "{% url 'checkout' %}";
+
+            // Show toast
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+
+            // Hide toast after 3s
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+
+            // Replace button after 2s
+            setTimeout(() => {
+                const container = document.getElementById("buttonContainer");
+                container.innerHTML = `
+                    <div class="button-group">
+                        <a href="{% url 'home' %}" class="checkout-btn home-btn">Home</a>
+                        <a href="{% url 'food_list' %}" class="checkout-btn shop-btn">Continue Shopping</a>
+                    </div>
+                `;
+            }, 1500);
+        }
+    </script>
 </body>
-
 </html>
+{% endblock %}
+

@@ -1,21 +1,214 @@
-{%extends 'layout.html'%}
-{%load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>feedback</title>
-</head>
-<body>
-     
-{%block contents%}
+{% extends 'layout.html' %}
+{% load static %}
+{% block contents %}
+<div class="feedback-full">
+  <h2 class="title">Give Feedback</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="feedback-container">
+      {% for entry in items_with_ratings %}
+        <div class="feedback-card">
+          <img src="{{ entry.item.image.url }}" alt="{{ entry.item.name }}">
+          <h4>{{ entry.item.name|upper }}</h4>
+
+          <div class="star-rating" data-item-id="{{ entry.item.id }}" data-initial-rating="{{ entry.rating }}">
+            {% for i in "12345" %}
+              <span class="star" data-value="{{ i }}">&#9733;</span>
+            {% endfor %}
+            <input type="hidden" name="rating_{{ entry.item.id }}" id="rating_{{ entry.item.id }}" value="{{ entry.rating }}">
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="submit-container">
+      <button class="submit-btn" onclick="handleFeedback()">Submit Feedback</button>
+    </div>
+  </form>
+</div>
+
+<div id="toast" class="toast">Thank you for your valuable feedback</div>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f9ff;
+  }
+
+  .feedback-full {
+        width: 90%;
+        max-width: 1000px;
+        margin: 40px auto;
+        border-radius: 16px;
+        padding: 30px 40px;
+        background-color: #ffffff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        animation: fadeIn 0.6s ease;
+  }
+
+  .feedback-full h2 {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        color: #002855;
+        position: relative;
+  }
+
+  .feedback-full h2::after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 3px;
+        background-color: #007bff;
+        left: 50%;
+        bottom: -8px;
+        transform: translateX(-50%);
+        border-radius: 2px;
+  }
+
+  .feedback-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+  }
 
 
 
+  .feedback-card {
+        background-color: #f9fbff;
+        border: 2px solid #e0ebf7;
+        border-radius: 12px;
+        padding: 20px;
+        width: 260px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+  }
 
+  .feedback-card:hover {
+        transform: scale(1.03);
+        border-color: #007bff;
+  }
 
-{%endblock%}
-</body>
+  .feedback-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 12px;
+  }
+  .feedback-card h4 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #004080;
+  }
 
-</html>
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .star-rating .star {
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .star-rating .star.selected {
+    color: #f5b301;
+  }
+
+  .submit-container {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #4BB543;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 15px 25px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  .toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  @keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 20px; opacity: 1;}
+  }
+
+  @keyframes fadeout {
+    from {top: 20px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.star-rating').forEach(ratingDiv => {
+    const stars = ratingDiv.querySelectorAll('.star');
+    const input = ratingDiv.querySelector('input');
+    const initialRating = parseInt(ratingDiv.dataset.initialRating);
+
+    if (initialRating) {
+      stars.forEach((s, i) => {
+        s.classList.toggle('selected', i < initialRating);
+      });
+    }
+
+    stars.forEach((star, idx) => {
+      star.addEventListener('click', () => {
+        const val = idx + 1;
+        input.value = val;
+        stars.forEach((s, i) => {
+          s.classList.toggle('selected', i < val);
+        });
+      });
+    });
+  });
+
+  function handleFeedback() {
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+</script>
+{% endblock %}
+

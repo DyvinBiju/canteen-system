@@ -1,0 +1,275 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block contents %}
+<style>
+    .profile-edit-container {
+        width: 90%;
+        max-width: 500px;
+        margin: 50px auto 20px;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 0 10px #ccc;
+        text-align: center;
+    }
+
+    .edit-title {
+        font-size: 30px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #1e3a8a;
+    }
+
+    .profile-picture-preview {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #3b82f6;
+        margin-bottom: 10px;
+    }
+
+    .profile-btns {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .blue-button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        min-width: 170px;
+        text-align: center;
+        transition: all 0.2s ease-in-out;
+        display: inline-block;
+        box-sizing: border-box;
+    }
+    .red-button{
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        max-height: 45px;
+        min-width: 170px;
+        text-align: center;
+        transition: all 0.2s ease-in-out;
+        display: inline-block;
+        box-sizing: border-box;
+        background-color: #ef4444;
+        border: none;
+    }
+
+    .blue-button {
+        background-color: #3b82f6;
+        border: none;
+    }
+
+    /* .red-button {
+        background-color: #ef4444;
+        border: none;
+    } */
+
+    .blue-button:hover {
+        background-color: #2563eb;
+        transform: scale(1.05);
+    }
+
+    .red-button:hover {
+        background-color: #b91c1c;
+        transform: scale(1.05);
+    }
+
+    .form-group {
+        margin: 15px 0;
+        text-align: left;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .save-button, .cancel-button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        color: white;
+        border: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .save-button {
+        background: #10b981;
+    }
+
+    .cancel-button {
+        background: #60a5fa;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .save-button:hover {
+        background: #059669;
+        transform: scale(1.05);
+    }
+
+    .cancel-button:hover {
+        background: #3b82f6;
+        transform: scale(1.05);
+    }
+
+    .delete-account-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        width: 100%;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .delete-account-btn:hover {
+        background-color: #991b1b;
+        transform: scale(1.02);
+    }
+
+    .view-profile-btn {
+        display: inline-block;
+        margin-top: 15px;
+        background-color: #1d4ed8;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .view-profile-btn:hover {
+        background-color: #1e40af;
+        transform: scale(1.05);
+    }
+
+    .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #10b981;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .toast.show {
+        opacity: 1;
+    }
+</style>
+
+<div class="profile-edit-container">
+    <h1 class="edit-title">Edit Profile</h1>
+
+    <div class="toast" id="toast" style="display:none;"></div>
+
+    <form method="post" enctype="multipart/form-data" id="profileForm">
+        {% csrf_token %}
+
+        <!-- Profile Picture -->
+        <div class="profile-picture-container">
+            {% if user_profile.profile_picture %}
+                <img id="profilePreview" src="{{ user_profile.profile_picture.url }}" class="profile-picture-preview">
+            {% else %}
+                <img id="profilePreview" src="{% static 'images/default-profile.png' %}" class="profile-picture-preview">
+            {% endif %}
+
+            <div class="profile-btns">
+                <label for="profile_picture" class="blue-button">Choose Profile Picture</label>
+                <input type="file" name="profile_picture" id="profile_picture" accept="image/*" onchange="previewProfilePicture(event)" style="display: none;">
+                <button type="button" class="red-button" onclick="deleteProfilePicture()">Delete Profile Picture</button>
+            </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="form-group"><label>Username:</label><input type="text" name="username" value="{{ user.username }}" required></div>
+        <div class="form-group"><label>First Name:</label><input type="text" name="first_name" value="{{ user.first_name }}" placeholder="First Name"></div>
+        <div class="form-group"><label>Last Name:</label><input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Last Name"></div>
+        <div class="form-group"><label>Email:</label><input type="email" name="email" value="{{ user.email }}" required></div>
+
+        <div class="button-group">
+            <button type="submit" class="save-button">Save Changes</button>
+            <a href="{% url 'profile' %}" class="cancel-button">Cancel</a>
+        </div>
+    </form>
+
+    <form method="post" action="{% url 'delete_account' %}">
+        {% csrf_token %}
+        <button type="submit" class="delete-account-btn" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">Delete Account</button>
+    </form>
+
+    <a href="{% url 'profile' %}" class="view-profile-btn">View Profile</a>
+</div>
+
+<script>
+    function previewProfilePicture(event) {
+        const reader = new FileReader();
+        reader.onload = e => document.getElementById('profilePreview').src = e.target.result;
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function deleteProfilePicture() {
+        fetch("{% url 'delete_profile_picture' %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                document.getElementById('profilePreview').src = "{% static 'images/default-profile.png' %}";
+                showToast('Profile picture deleted successfully');
+            }
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.style.display = 'block';
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // Show Django messages as toast
+    {% if messages %}
+        window.addEventListener('DOMContentLoaded', () => {
+            {% for message in messages %}
+                showToast("{{ message|escapejs }}");
+            {% endfor %}
+        });
+    {% endif %}
+</script>
+{% endblock %}

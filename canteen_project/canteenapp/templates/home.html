@@ -123,22 +123,25 @@
        </h2>
      </div>
      <div class="row">
-       <div class="col-sm-6 col-md-4 mx-auto">
+      {% for category in categories %}
+      <div class="col-sm-6 col-md-4 mx-auto">
          <div class="box">
            <div class="img-box">
-             <img src="{% static 'images/r1.jpg'%}" class="box-img" alt="">
+            <a href="{% url 'food_list' %}?category_id={{ category.id }}"><img src="{{ category.image.url }}" class="box-img" alt=""></a>
            </div>
            <div class="detail-box">
              <h4>
-               Breakfast
+              {{ category.name | upper}}
              </h4>
-             <a href="{% url 'foodbycategory' 'breakfast' %}">
+             <a href="{% url 'food_list' %}?category_id={{ category.id }}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
+
            </div>
          </div>
        </div>
-       <div class="col-sm-6 col-md-4 mx-auto">
+       {% endfor %}
+       <!-- <div class="col-sm-6 col-md-4 mx-auto">
          <div class="box">
            <div class="img-box">
              <img src="{% static 'images/r2.jpg'%}" class="box-img" alt="">
@@ -147,7 +150,7 @@
              <h4>
                Lunch
              </h4>
-             <a href="{% url 'foodbycategory' 'lunch' %}">
+             <a href="{% url 'food_list' %}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
            </div>
@@ -162,13 +165,13 @@
              <h4>
                Dinner
              </h4>
-             <a href="{% url 'foodbycategory' 'dinner' %}">
+             <a href="{% url 'food_list' %}">
                <i class="fa fa-arrow-right" aria-hidden="true"></i>
              </a>
            </div>
          </div>
        </div>
-     </div>
+     </div> -->
      
    </div>
  </section>
@@ -234,14 +237,14 @@
          </div>
          <div class="detail-box">
            <p>
-            Welcome to BVM Canteen, your go-to destination for delicious, hygienic, and affordable meals on campus. We take pride in serving a variety of freshly prepared dishes, catering to different tastes and dietary preferences. Our canteen is designed to provide students and staff with a comfortable and friendly environment where they can enjoy nutritious food and refreshing beverages.
+            Welcome to Delfood Canteen system, your go-to destination for delicious, hygienic, and affordable meals on campus. We take pride in serving a variety of freshly prepared dishes, catering to different tastes and dietary preferences. Our canteen is designed to provide students and staff with a comfortable and friendly environment where they can enjoy nutritious food and refreshing beverages.
 
             We prioritize quality ingredients, cleanliness, and prompt service to ensure that you have the best dining experience. Whether you're grabbing a quick snack between classes or enjoying a meal with friends, our canteen is here to keep you energized throughout the day.
             
             Join us and savor the flavors that make campus life even better!
             
            </p>
-           <a href="">
+           <a href="{% url 'about' %}">
              <i class="fa fa-arrow-right" aria-hidden="true"></i>
            </a>
          </div>
@@ -254,7 +257,7 @@
 
  <!-- news section -->
 
- <section class="news_section">
+ <!-- <section class="news_section">
    <div class="container">
      <div class="heading_container heading_center">
        <h2>
@@ -306,7 +309,7 @@
        </div>
      </div>
    </div>
- </section>
+ </section> -->
 
  <!-- end news section -->
 

@@ -11,6 +11,7 @@ class TimeStampedModel(models.Model):
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=30,unique=True)
+    image = models.ImageField(upload_to='category_images/',null=True,blank=True)
     def __str__(self):
         return self.name
 
@@ -21,7 +22,7 @@ class FoodItems(TimeStampedModel):
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to='canteen_images/',null=True,blank=True)
     description = models.TextField(blank=True)
-    f_stock = models.IntegerField()
+    # f_stock = models.IntegerField()
     price = models.DecimalField(max_digits=10,decimal_places=2)
     category = models.ForeignKey(Category,on_delete=models.CASCADE, null=True,blank=False)
 
@@ -42,11 +43,11 @@ class Feedback(TimeStampedModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     food_item = models.ForeignKey(FoodItems, on_delete=models.CASCADE, null=True, blank=True)
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])  # Rating from 1 to 5
-    comments = models.TextField(blank=True)
+    # comments = models.TextField(blank=True)
     submission_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.comments
+        return f"{self.student.username}'s rating on {self.food_item.name}"
 
 class OrderItems(TimeStampedModel):
      food = models.ForeignKey(FoodItems,on_delete=models.CASCADE)
@@ -56,3 +57,11 @@ class OrderItems(TimeStampedModel):
 
      def __str__(self):
         return self.food.name
+
+class UserProfile(TimeStampedModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

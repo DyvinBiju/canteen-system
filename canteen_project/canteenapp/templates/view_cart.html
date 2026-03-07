@@ -1,0 +1,197 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block contents %}
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .cart-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px 40px;
+    }
+
+    .cart-title {
+        text-align: center;
+        font-size: 45px;
+        color: #1d3557;
+        margin-bottom: 10px;
+    }
+
+    .cart-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-image {
+        width: 150px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 6px;
+    }
+
+    .item-info {
+        color: #666;
+        font-size: 17px;
+    }
+
+    .item-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .qty-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .qty-controls a {
+        padding: 4px 10px;
+        border: 1px solid #ccc;
+        background: #e8f0fe;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .qty-controls span {
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .remove-btn {
+        background: #dc3545;
+        border: 1px solid #f5c2c7;
+        color: white;
+        padding: 5px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .cart-summary {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .total-price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1d3557;
+        margin-bottom: 20px;
+    }
+
+    .action-buttons a {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+    .shop{
+        background-color: #007bff;
+        color: white;
+
+    }
+    .shop:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+    .proceed{
+        background-color: #42d032;
+        color: white;
+    }
+    .proceed:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+    
+
+    .empty-cart {
+        text-align: center;
+        color: #666;
+        font-size: 18px;
+        margin-top: 60px;
+    }
+
+</style>
+
+<div class="cart-wrapper">
+    <h1 class="cart-title">Your Cart</h1>
+    <p class="cart-subtitle">Review and manage your selected items</p>
+
+    {% if cart %}
+        {% for food_id, item in cart.items %}
+            <div class="cart-item">
+                {% if item.image %}
+                    <img src="{{ item.image }}" alt="{{ item.name }}" class="item-image">
+                {% endif %}
+                <div class="item-details">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-info">Price: ₹{{ item.price }}</div>
+                    <div class="item-info">Quantity: {{ item.quantity }}</div>
+                    <div class="item-info">Total: ₹{{ item.total }}</div>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-controls">
+                        <a href="{% url 'decrease_quantity' food_id %}">-</a>
+                        <span>{{ item.quantity }}</span>
+                        <a href="{% url 'increase_quantity' food_id %}">+</a>
+                    </div>
+                    <a href="{% url 'remove_from_cart' food_id %}" class="remove-btn">Remove</a>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="cart-summary">
+            <div class="total-price">Total Price: ₹{{ total_price }}</div>
+            <div class="action-buttons">
+                <a href="{% url 'food_list' %}" class="shop">Continue Shopping</a>
+                <a href="{% url 'bill' %}" class="proceed">Proceed to Checkout</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            Your cart is empty. <a href="{% url 'food_list' %}">Browse food items</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

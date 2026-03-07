@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup | Delfood</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            background-color: #f2f6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .signup-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 400px;
+            overflow: hidden;
+        }
+
+        .signup-card .header {
+            background-color: #2563eb;
+            padding: 20px;
+            text-align: center;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .signup-card .header a {
+            text-decoration: none;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-card .header img {
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .signup-card .body {
+            padding: 25px 30px 30px;
+        }
+
+        .signup-card h2 {
+            margin-bottom: 10px;
+            color: #2563eb;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .messages {
+            margin-bottom: 15px;
+        }
+
+        .messages .error {
+            color: #dc2626;
+        }
+
+        .messages .success {
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-card">
+        <div class="header">
+            <a href="{% url 'home' %}">
+                Delfood
+            </a>
+        </div>
+        <div class="body">
+            <h2>Sign Up</h2>
+
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" value="{{ username|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ email|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" minlength="8" maxlength="12" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="confirm_password" minlength="8" maxlength="12" required>
+                </div>
+                <button type="submit" class="signup-btn">Sign Up</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Log In</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

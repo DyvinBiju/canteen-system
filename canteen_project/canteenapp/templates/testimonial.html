@@ -45,13 +45,13 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{% url 'home' %}">
             <span>
               Delfood
             </span>
           </a>
           <div class="" id="">
-            <div class="User_option">
+            <!-- <div class="User_option">
               <a href="">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 <span>Login</span>
@@ -62,20 +62,19 @@
                   <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
               </form>
-            </div>
+            </div> -->
             <div class="custom_menu-btn">
               <button onclick="openNav()">
-                <img src="images/menu.png" alt="">
+                <img src="{% static 'images/menu.png'%}" alt="">
               </button>
             </div>
             <div id="myNav" class="overlay">
               <div class="overlay-content">
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="blog.html">Blog</a>
-                <a href="testimonial.html">Testimonial</a>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'testimonial' %}">Testimonial</a>
+
               </div>
-            </div>
           </div>
         </nav>
       </div>
@@ -98,10 +97,10 @@
             <div class="carousel-item active">
               <div class="detail-box">
                 <h4>
-                  Virginia
+                  Teachers
                 </h4>
                 <p>
-                  Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+                 The college canteen system has truly transformed our dining experience. With a seamless ordering process, a variety of delicious and hygienic food options, and quick service, it has made our breaks more enjoyable. The digital payment integration is a game-changer, reducing long queues and making transactions effortless. Whether it's a quick coffee between lectures or a wholesome meal, the canteen ensures quality and convenience. Highly recommended for all students
                 </p>
                 <i class="fa fa-quote-left" aria-hidden="true"></i>
               </div>
@@ -109,10 +108,10 @@
             <div class="carousel-item">
               <div class="detail-box">
                 <h4>
-                  Virginia
+                  Students
                 </h4>
                 <p>
-                  Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+                 The canteen system at our college has made a huge difference in our daily routine. The user-friendly ordering system saves time, and the diverse menu ensures there’s something for everyone. The food is always fresh, tasty, and reasonably priced, making it the perfect spot to grab a quick bite or enjoy a meal with friends. A fantastic initiative that enhances student life
                 </p>
                 <i class="fa fa-quote-left" aria-hidden="true"></i>
               </div>
@@ -120,10 +119,10 @@
             <div class="carousel-item">
               <div class="detail-box">
                 <h4>
-                  Virginia
+                  Staffs
                 </h4>
                 <p>
-                  Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+                 The new canteen system is nothing short of amazing! The efficient service, digital payment options, and real-time order tracking have made getting food so much easier. The hygiene standards are excellent, and the variety of meals keeps things exciting. It’s now a favorite hangout spot where we can relax and enjoy great food. Highly recommended
                 </p>
                 <i class="fa fa-quote-left" aria-hidden="true"></i>
               </div>
@@ -162,24 +161,17 @@
         <div class="info_links">
           <ul>
             <li class="active">
-              <a href="index.html">
-                Home
-              </a>
+              <a href="{% url 'home' %}">Home</a>
+
             </li>
             <li>
-              <a href="about.html">
-                About
-              </a>
+              <a href="{% url 'about' %}">About</a>
+
             </li>
+            
             <li>
-              <a class="" href="blog.html">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a class="" href="testimonial.html">
-                Testimonial
-              </a>
+              <a href="{% url 'testimonial' %}">Testimonial</a>
+
             </li>
           </ul>
         </div>

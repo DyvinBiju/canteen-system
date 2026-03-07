@@ -1,21 +1,21 @@
-.wrapper{
+/* .wrapper{
      display: flex;
-     justify-content: center;
+     justify-content: center; */
      /* align-items: center; */
      /* height: 100%;
      width: 100%; */
-}
+/* } */
  
- .bill-container {
+ /* .bill-container { */
      /* background-color: #fff; */
-     margin-top: 50px;
+     /* margin-top: 50px; */
      /* margin-left: 300px;  */
 
-     padding: 20px;
+     /* padding: 20px;
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.318);
-     border-radius: 8px;
+     border-radius: 8px; */
      /* height: 500px; */
-     width: 600px;
+     /* width: 600px;
      text-align: center;
  }
  
@@ -41,4 +41,4 @@
  
  p {
      margin: 5px 0;
- }
+ } */

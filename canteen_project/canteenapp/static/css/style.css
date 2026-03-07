@@ -154,8 +154,8 @@ a:focus {
 }
 
 .User_option a {
-  color: #ffffff;
-  margin-left: 25px;
+  color: black ;
+  /* margin-left: 15px; */
 }
 
 .User_option .form-inline {
